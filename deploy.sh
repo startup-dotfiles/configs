@@ -53,9 +53,15 @@ symlinkFile() {
     # Ensure the target directory exists
     mkdir -p "$destination"
 
+    # If it's a symlink, don't back it up; remove it instead.
     if [ -L "$target" ]; then
-        printf "${WARN} ${YELLOW}%s${RESET} already symlinked.\n" "$target"
-        return
+        if [ $is_force_write -eq 1 ]; then
+            # Delete target files
+            rm "$target"
+        else
+            printf "${WARN} ${YELLOW}%s${RESET} already symlinked.\n" "$target"
+            return
+        fi
     fi
 
     if [ -e "$target" ]; then
@@ -95,26 +101,26 @@ copyFile() {
     # Ensure the target directory exists
     mkdir -p "$destination"
 
-    if [ -e "$target" ]; then
-        if [ $is_force_write -eq 0 ]; then
-            if [ -L "$target" ]; then
-                printf "${WARN} ${YELLOW}%s${RESET} already symlinked, try run again with -f option.\n" "$target"
-                return
-            else
-                printf "${ERROR} ${YELLOW}%s${RESET} exists, try run again with -f option.\n" "$target"
-                exit 1
-            fi
+    # If it's a symlink, don't back it up; remove it instead.
+    if [ -L "$target" ]; then
+        if [ $is_force_write -eq 1 ]; then
+            # Delete target files
+            rm "$target"
         else
-            # If it's a symlink, don't back it up; remove it instead.
-            if [ -L "$target" ]; then
-                # Delete target files
-                rm "$target"
-            else
-                # Backup target files
-                printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
-                mkdir -p "$BACKUP_DIR"
-                mv "$target" "$BACKUP_DIR"
-            fi
+            printf "${WARN} ${YELLOW}%s${RESET} already symlinked, try run again with -f option.\n" "$target"
+            return
+        fi
+    fi
+
+    if [ -e "$target" ]; then
+        if [ $is_force_write -eq 1 ]; then
+            # Backup target files
+            printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
+            mkdir -p "$BACKUP_DIR"
+            mv "$target" "$BACKUP_DIR"
+        else
+            printf "${ERROR} ${YELLOW}%s${RESET} exists, try run again with -f option.\n" "$target"
+            exit 1
         fi
     fi
 
