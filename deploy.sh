@@ -77,7 +77,7 @@ symlinkFile() {
     fi
 
     ln -s "$source" "$target"
-    printf "${OK} ${YELLOW}%s${RESET} -> ${YELLOW}%s${RESET}\n" "$source" "$target"
+    printf "${OK} ${YELLOW}%s${RESET} -> ${SKY_BLUE}%s${RESET}\n" "$source" "$target"
 }
 
 copyFile() {
@@ -125,7 +125,7 @@ copyFile() {
     fi
 
     cp "$source" "$target"
-    printf "${OK} ${YELLOW}%s${RESET} has been copied to ${YELLOW}%s${RESET}\n" "$source" "$target"
+    printf "${OK} ${YELLOW}%s${RESET} has been copied to ${SKY_BLUE}%s${RESET}\n" "$source" "$target"
 }
 
 deployManifest() {

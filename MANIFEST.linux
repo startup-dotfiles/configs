@@ -43,6 +43,8 @@ apps/tui/glow/glow.yml|symlink|.config/glow
 apps/tui/procs/config.toml|symlink|.config/procs
 ## neomutt
 apps/tui/neomutt/neomuttrc|symlink|.config/neomutt
+## rmpc
+apps/tui/rmpc/config.ron|symlink|.config/rmpc
 ## satty
 apps/satty/config.toml|symlink|.config/satty
 ## mpd
@@ -50,11 +52,11 @@ apps/mpd/mpd.conf|symlink|.config/mpd
 
 ## flags
 apps/flags/chromium-flags.conf|symlink|.config
-apps/flags/vivaldi-stable.conf|symlink|.config
+# apps/flags/vivaldi-stable.conf|symlink|.config
 apps/flags/electron-flags.conf|symlink|.config
 apps/flags/code-flags.conf|symlink|.config
 apps/flags/codium-flags.conf|symlink|.config
-apps/flags/bilibili-flags.conf|symlink|.config
+# apps/flags/bilibili-flags.conf|symlink|.config
 apps/flags/qq-flags.conf|symlink|.config
 apps/flags/spotify-launcher.conf|symlink|.config
 
@@ -71,10 +73,9 @@ etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfi
 # etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
 # etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
 
-
 # Arch Linux
 ## pacman
-etc/pacman/makepkg.conf|symlink|.config/pacman
-etc/pacman/makepkg-clang.conf|symlink|.config/pacman
+# etc/pacman/makepkg.conf|symlink|.config/pacman
+# etc/pacman/makepkg-clang.conf|symlink|.config/pacman
 ## yay
-etc/yay/config.json|symlink|.config/yay
+# etc/yay/config.json|symlink|.config/yay

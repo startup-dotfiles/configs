@@ -16,6 +16,17 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 ./deploy.sh -m <MANIFEST>   # specify a manifest file
 ```
 
+## Packages
+
+```sh
+# [Arch Linux] Install packages from a list
+# See https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Install_packages_from_a_list
+# NOTE: This will filter out external packages from the list that come from the AUR or are installed locally.
+pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort pkglist.txt))
+# Then, install packages from the AUR using yay.
+yay -S --needed - < pkglist-aur.txt
+```
+
 ## References
 
 - [A script from rexim's dotfiles](https://github.com/rexim/dotfiles/blob/master/deploy.sh)
