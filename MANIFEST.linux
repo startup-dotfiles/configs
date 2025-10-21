@@ -7,7 +7,74 @@
 # - destination   : relative path, relative to your $HOME directory.
 # - new_filename  : optionall, use the filename instead of the repo filename.
 
+# Coding
+## clang-format
 coding/.clang-format|symlink
+## clangd
 coding/.clangd|symlink|.config/clangd|config.yaml
+## gdb
+coding/gdbinit|symlink|.config/gdb
+## shellcheck
 coding/.shellcheckrc|symlink|.config
+## gf2
 coding/gf2_config.ini|symlink|.config
+## marksman
+coding/marksman/config.toml|symlink|.config/marksman
+
+# Apps
+## aria2
+apps/cli/aria2/aria2.conf|symlink|.config/aria2
+## github-cli
+apps/cli/gh/config.yml|symlink|.config/gh
+apps/cli/gh/hosts.yml|symlink|.config/gh
+## htop
+apps/tui/htop/htoprc|symlink|.config/htop
+## btop
+apps/tui/btop/btop.conf|symlink|.config/btop
+## lazygit
+apps/tui/lazygit/config.yml|symlink|.config/lazygit
+## lazydocker
+apps/tui/lazydocker/config.yml|symlink|.config/lazydocker
+## go-musicfox
+apps/tui/go-musicfox/go-musicfox.ini|symlink|.config/go-musicfox
+## glow
+apps/tui/glow/glow.yml|symlink|.config/glow
+## procs
+apps/tui/procs/config.toml|symlink|.config/procs
+## neomutt
+apps/tui/neomutt/neomuttrc|symlink|.config/neomutt
+## satty
+apps/satty/config.toml|symlink|.config/satty
+## mpd
+apps/mpd/mpd.conf|symlink|.config/mpd
+
+## flags
+apps/flags/chromium-flags.conf|symlink|.config
+apps/flags/vivaldi-stable.conf|symlink|.config
+apps/flags/electron-flags.conf|symlink|.config
+apps/flags/code-flags.conf|symlink|.config
+apps/flags/codium-flags.conf|symlink|.config
+apps/flags/bilibili-flags.conf|symlink|.config
+apps/flags/qq-flags.conf|symlink|.config
+apps/flags/spotify-launcher.conf|symlink|.config
+
+# Environment
+## user dirs
+etc/user-dirs.dirs|symlink|.config
+etc/user-dirs.locale|symlink|.config
+## fontconfig
+etc/fontconfig/fonts.conf|symlink|.config/fontconfig
+etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfig/conf.d
+
+## KDE Plasma
+### Plasma workspace
+# etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
+# etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
+
+
+# Arch Linux
+## pacman
+etc/pacman/makepkg.conf|symlink|.config/pacman
+etc/pacman/makepkg-clang.conf|symlink|.config/pacman
+## yay
+etc/yay/config.json|symlink|.config/yay

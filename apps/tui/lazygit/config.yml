@@ -1,0 +1,81 @@
+gui:
+  # Deprecated: use nerdFontsVersion instead
+  # showIcons: true
+  # Nerd fonts version to use.
+  # One of: '2' | '3' | empty string (default)
+  # If empty, do not show icons.
+  nerdFontsVersion: "3"
+  # One of 'auto' (default) | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru'
+  language: auto
+  # Use the mocha catppuccin theme [mocha/blue.yml]
+  # https://github.com/catppuccin/lazygit/blob/main/themes/mocha/blue.yml
+  theme:
+    activeBorderColor:
+      - "#89b4fa"
+      - bold
+    inactiveBorderColor:
+      - "#a6adc8"
+    optionsTextColor:
+      - "#89b4fa"
+    selectedLineBgColor:
+      - "#313244"
+    selectedRangeBgColor:
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#89b4fa"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
+git:
+  # See https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
+  paging:
+    # Value of the --color arg in the git diff command. Some pagers want this to be set to 'always' and some want it set to 'never'
+    colorArg: always
+    # e.g.
+    # diff-so-fancy
+    # delta --dark --paging=never
+    # ydiff -p cat -s --wrap --width={{columnWidth}}
+    pager: delta --dark --paging=never
+    # If true, Lazygit will use whatever pager is specified in `$GIT_PAGER`, `$PAGER`, or your *git config*. If the pager ends with something like ` | less` we will strip that part out, because less doesn't play nice with our rendering approach. If the custom pager uses less under the hood, that will also break rendering (hence the `--paging=never` flag for the `delta` pager).
+    useConfig: false
+    # e.g. 'difft --color=always'
+    externalDiffCommand: ""
+  # Config relating to committing
+  commit:
+    # If true, pass '--signoff' flag when committing
+    signOff: false
+    # Automatic WYSIWYG wrapping of the commit message as you type
+    autoWrapCommitMessage: true
+    # If autoWrapCommitMessage is true, the width to wrap to
+    autoWrapWidth: 72
+  # Config relating to merging
+  merging:
+    # If true, run merges in a subprocess so that if a commit message is required, Lazygit will not hang
+    # Only applicable to unix users.
+    manualCommit: false
+    # Extra args passed to `git merge`, e.g. --no-ff
+    args: ""
+    # The commit message to use for a squash merge commit. Can contain "{{selectedRef}}" and "{{currentBranch}}" placeholders.
+    squashMergeMessage: Squash merge {{selectedRef}} into {{currentBranch}}
+# If true, show a confirmation popup before quitting Lazygit
+confirmOnQuit: false
+os:
+  # A built-in preset that sets all of the above settings. Supported presets
+  # are defined in the getPreset function in editor_presets.go.
+  editPreset: "nvim"
+update:
+  # One of: 'prompt' (default) | 'background' | 'never'
+  method: never
+  # Period in days between update checks
+  days: 14
+# What to do when opening Lazygit outside of a git repo.
+# - 'prompt': (default) ask whether to initialize a new repo or open in the most recent repo
+# - 'create': initialize a new repo
+# - 'skip': open most recent repo
+# - 'quit': exit Lazygit
+notARepository: quit
