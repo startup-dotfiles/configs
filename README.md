@@ -10,7 +10,7 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 
 ```sh
 # The script provides several options.
-./deploy.sh                 # Install them info your $HOME
+./deploy.sh                 # Install them into your $HOME
 ./deploy.sh -h              # only offer help info
 ./deploy.sh -f              # force write (with backup)
 ./deploy.sh -m <MANIFEST>   # specify a manifest file
