@@ -1,0 +1,111 @@
+# References
+# - https://clangd.llvm.org/config
+# - https://clangd.llvm.org/guides/include-cleaner
+
+# - https://clangd.llvm.org/features#kinds
+# - https://clangd.llvm.org/features#modifiers
+
+# - https://clang.llvm.org/extra/clang-tidy/checks/list.html
+# - https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/DiagnosticParseKinds.td
+# - https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/DiagnosticSemaKinds.td
+
+If:
+  PathMatch: [
+    .*\.(c|h)$,
+    .*\.(c|h)pp
+  ]
+  PathExclude: []
+CompileFlags:
+  Add: [
+    -Wno-unknown-warning-option,
+    -D__clangd__ # add your custom flags
+  ]
+  Remove: []
+  # Compiler: clang
+  # CompilationDatabase: Ancestors
+  # BuiltinHeaders: QueryDriver
+Index:
+  Background: Skip # Disable slow background indexing of these files.
+  # StandardLibrary: true
+Style:
+  # QuotedHeaders: "src/.*"
+  # AngledHeaders: ["third-party/.*"]
+Diagnostics:
+  Suppress: [
+    # clang internal diagnostic codes
+    # 'err_unknown_type',
+    # 'err_unknown_typename'
+  ]
+  ClangTidy: # start clangd with `--clang-tidy` option
+    # Add:
+    #   - cppcoreguidelines-*
+    #   - modernize-*
+    #   - performance-*
+    #   - misc-*
+    #   - readability-*
+    #   - bugprone-*
+    Remove:
+      - cppcoreguidelines-avoid-magic-numbers # (alias)
+      - readability-magic-numbers
+      - readability-identifier-naming
+      - readability-identifier-length
+      # - modernize-use-trailing-return-type
+      - misc-use-internal-linkage 
+    # CheckOptions:
+    #   readability-identifier-naming.ClassCase: CamelCase
+    #   readability-identifier-naming.EnumCase: CamelCase
+    #   readability-identifier-naming.NamespaceCase: CamelCase
+    #   readability-identifier-naming.StructCase: CamelCase
+    FastCheckFilter: Strict # Strict(default), Loose, None
+  UnusedIncludes: Strict # Strict(default), None
+  Includes:
+    IgnoreHeader: []
+    AnalyzeAngledIncludes: false
+  MissingIncludes: None # Strict(default), None
+Completion:
+  AllScopes: true
+  ArgumentLists: FullPlaceholders
+  # HeaderInsertion: IWYU # IWYU(default), None
+InlayHints:
+  Enabled: false            # enables/disables the inlay-hints feature for all kinds
+  # BlockEnd: true           # block end comment
+  # Designators: true        # designators in aggregate initialization
+  # ParameterNames: true     # parameter names in function calls
+  # DeducedTypes: true       # deduced types
+  # DefaultArguments: true   # default arguments
+  # TypeNameLimit: 24        # character limit for type hints
+Hover:
+  # ShowAKA: false
+  # MacroContentsLimit: 2048
+SemanticTokens:
+  # DisabledKinds: []
+  # DisabledModifiers: []
+Documentation:
+  # CommentFormat: PlainText # PlainText(Defalut), Markdown, Doxygen
+
+---
+
+If:
+  PathMatch: .*\.cu
+CompileFlags:
+  Add: [
+    --no-cuda-version-check,
+    -Wno-unknown-cuda-version,
+  ]
+  Remove: [
+     -forward-unknown-to-host-compiler,
+     -expt-*, --expt-*,
+     -gencode*, --generate-code*,
+     -Xfatbin*,
+     -arch=*,
+     -rdc=*,
+     -mno-*
+  ]
+InlayHints:
+  Enabled: false
+Diagnostics:
+  Suppress: [
+    # clang internal diagnostic codes
+    'ovl_no_viable_function_in_call',
+    'ref_bad_target'
+  ]

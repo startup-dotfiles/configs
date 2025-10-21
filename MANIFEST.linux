@@ -1,0 +1,13 @@
+# Syntax: <the_repo_file>|<operation>|<destination>|[new_filename]
+#
+# NOTE: Use '|' as the delimiter.
+#
+# - the_repo_file : relative path, relative to the repository root.
+# - operation     : symlink or copy
+# - destination   : relative path, relative to your $HOME directory.
+# - new_filename  : optionall, use the filename instead of the repo filename.
+
+coding/.clang-format|symlink
+coding/.clangd|symlink|.config/clangd|config.yaml
+coding/.shellcheckrc|symlink|.config
+coding/gf2_config.ini|symlink|.config
