@@ -8,7 +8,7 @@
     password: None,
     theme: Some("default"),
     cache_dir: None,
-    lyrics_dir: Some("~/Music/musicfox/lyrics"), // WARNING: hardcode
+    lyrics_dir: Some("~/Music"), // WARNING: hardcode
     volume_step: 5,
     max_fps: 30,
     scrolloff: 0,
