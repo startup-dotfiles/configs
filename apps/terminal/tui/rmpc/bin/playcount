@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# https://mierak.github.io/rmpc/next/guides/on_song_change/#track-song-play-count
+# Requirements:
+# - jq
+
+sticker=$(rmpc sticker get "$FILE" "playCount" | jq -r '.value')
+if [ -z "$sticker" ]; then
+    rmpc sticker set "$FILE" "playCount" "1"
+else
+    rmpc sticker set "$FILE" "playCount" "$((sticker + 1))"
+fi

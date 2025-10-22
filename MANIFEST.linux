@@ -51,6 +51,8 @@ apps/terminal/tui/neomutt/neomuttrc|symlink|.config/neomutt
 apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
 ### rmpc
 apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
+apps/terminal/tui/rmpc/themes/default.ron|symlink|.config/rmpc/themes
+apps/terminal/tui/rmpc/bin/playcount|symlink|.config/rmpc/bin
 ### satty
 apps/terminal/satty/config.toml|symlink|.config/satty
 
