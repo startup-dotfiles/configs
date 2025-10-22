@@ -68,8 +68,8 @@ symlinkFile() {
         if [ $is_force_write -eq 1 ]; then
             # Backup target files
             printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
-            mkdir -p "$BACKUP_DIR"
-            mv "$target" "$BACKUP_DIR"
+            mkdir -p "$BACKUP_DIR/$2"
+            mv "$target" "$BACKUP_DIR/$2"
         else
             printf "${ERROR} ${YELLOW}%s${RESET} exists but it's not a symlink, try run again with -f option.\n" "$target"
             exit 1
@@ -77,7 +77,7 @@ symlinkFile() {
     fi
 
     ln -s "$source" "$target"
-    printf "${OK} ${YELLOW}%s${RESET} -> ${SKY_BLUE}%s${RESET}\n" "$source" "$target"
+    printf "${OK} ${YELLOW}%s${RESET} -> ${SKY_BLUE}%s${RESET}\n" "$target" "$source"
 }
 
 copyFile() {
@@ -116,8 +116,8 @@ copyFile() {
         if [ $is_force_write -eq 1 ]; then
             # Backup target files
             printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
-            mkdir -p "$BACKUP_DIR"
-            mv "$target" "$BACKUP_DIR"
+            mkdir -p "$BACKUP_DIR/$2"
+            mv "$target" "$BACKUP_DIR/$2"
         else
             printf "${ERROR} ${YELLOW}%s${RESET} exists, try run again with -f option.\n" "$target"
             exit 1
