@@ -1,23 +1,32 @@
+# Coding
 marksman
 
+# Apps
 zen-browser-bin
 spotify-launcher
 
+# CLI
 aria2
 github-cli
+satty
 
+# TUI
 htop
 btop
-lazygit
-lazydocker
+cava
 glow
 procs
 neomutt
-rmpc
+lazygit
+lazydocker
 
-satty
+# Music Player
 mpd
+mpc
+rmpc
+ncmpcpp
 
+# Package Manager
 yay
 paru
 
