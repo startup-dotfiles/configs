@@ -1,12 +1,14 @@
+// Refs: https://mierak.github.io/rmpc/next/configuration/
+
 #![enable(implicit_some)]
 #![enable(unwrap_newtypes)]
 #![enable(unwrap_variant_newtypes)]
 (
     address: "127.0.0.1:6600",
     password: None,
-    theme: None,
+    theme: Some("default"),
     cache_dir: None,
-    on_song_change: None,
+    lyrics_dir: Some("~/Music/musicfox/lyrics"),
     volume_step: 5,
     max_fps: 30,
     scrolloff: 0,
@@ -14,6 +16,8 @@
     enable_mouse: true,
     status_update_interval_ms: 1000,
     select_current_song_on_change: false,
+    enable_config_hot_reload: true,
+    on_song_change: ["~/.config/rmpc/bin/playcount"],
     album_art: (
         method: Auto,
         max_size_px: (width: 1200, height: 1200),
@@ -112,12 +116,23 @@
         album_sort_by: Date,
     ),
     tabs: [
+        // https://mierak.github.io/rmpc/next/configuration/cava/
         (
             name: "Queue",
             pane: Split(
-            direction: Horizontal,
-            panes: [(size: "60%", pane: Pane(Queue)), (size: "40%", pane: Pane(AlbumArt))],
-        ),
+                direction: Horizontal,
+                panes: [
+                    (size: "40%", pane: Pane(AlbumArt)),
+                    (size: "60%", pane: Split(
+                        direction: Vertical,
+                        panes: [
+                            (size: "25%", pane: Pane(Queue)),
+                            (size: "50%", pane: Pane(Lyrics)),
+                            (size: "25%", pane: Pane(Cava)),
+                        ],
+                    )),
+                ],
+            ),
         ),
         (
             name: "Directories",
@@ -144,5 +159,28 @@
             pane: Pane(Search),
         ),
     ],
+    // https://mierak.github.io/rmpc/next/configuration/cava/
+    cava: (
+        framerate: 60, // default 60
+        autosens: true, // default true
+        sensitivity: 100, // default 100
+        lower_cutoff_freq: 50, // not passed to cava if not provided
+        higher_cutoff_freq: 10000, // not passed to cava if not provided
+        input: (
+            method: Fifo,
+            source: "/tmp/mpd.fifo",
+            sample_rate: 44100,
+            channels: 2,
+            sample_bits: 16,
+        ),
+        smoothing: (
+            noise_reduction: 77, // default 77
+            monstercat: false, // default false
+            waves: false, // default false
+        ),
+        // this is a list of floating point numbers thats directly passed to cava
+        // they are passed in order that they are defined
+        eq: []
+    ),
 )
 
