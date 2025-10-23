@@ -98,5 +98,8 @@ etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfi
 
 ## mpd                                 (system --user enable --now mpd.service)
 services/mpd/mpd.conf|symlink|.config/mpd
+## pipewire
+services/pipewire/pipewire.conf.d/10-sound.conf|symlink|.config/pipewire/pipewire.conf.d
+services/pipewire/pipewire.conf.d/20-no-resampling.conf|symlink|.config/pipewire/pipewire.conf.d
 
 # <---------------------------------------------------------------- ends Services
