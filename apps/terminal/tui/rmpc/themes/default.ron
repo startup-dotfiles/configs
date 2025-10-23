@@ -1,30 +1,42 @@
+// https://mierak.github.io/rmpc/next/configuration/theme/
+
 #![enable(implicit_some)]
 #![enable(unwrap_newtypes)]
 #![enable(unwrap_variant_newtypes)]
 (
     default_album_art_path: None,
-    show_song_table_header: true,
-    draw_borders: true,
-    format_tag_separator: " | ",
-    browser_column_widths: [20, 38, 42],
+
     background_color: None,
-    text_color: None,
     header_background_color: None,
     modal_background_color: None,
-    preview_label_style: (fg: "yellow"),
-    preview_metadata_group_style: (fg: "yellow", modifiers: "Bold"),
+    modal_backdrop: true, // increased visual clarity
+    text_color: None,
+
+    // Item
+    highlighted_item_style: (fg: "black", bg: "#ea403f", modifiers: "Bold | Italic"),
+    current_item_style: (fg: "black", bg: "#34B1FF", modifiers: "Italic"),
+
+    // Border
+    draw_borders: true,
+    borders_style: (fg: "#8ccf7e"),
+    highlight_border_style: (fg: "blue"),
+
+    // Misc
+    format_tag_separator: " | ",
+    lyrics: (
+        timestamp: false, // show [00:00]
+    ),
+    symbols: (song: "S", dir: "D", marker: "M", ellipsis: "..."),
+
+    // ----------------------------------------------------------------------------------------
+
     tab_bar: (
-        enabled: true,
+        // enabled: true, // WARNING: Deprecated
         active_style: (fg: "black", bg: "blue", modifiers: "Bold"),
         inactive_style: (),
     ),
-    highlighted_item_style: (fg: "blue", modifiers: "Bold"),
-    current_item_style: (fg: "black", bg: "blue", modifiers: "Bold"),
-    borders_style: (fg: "blue"),
-    highlight_border_style: (fg: "blue"),
-    symbols: (song: "S", dir: "D", marker: "M", ellipsis: "..."),
     progress_bar: (
-        symbols: ["-", ">", " "],
+        symbols: ["-", ">", " "],   // ->
         track_style: (fg: "#1e2030"),
         elapsed_style: (fg: "blue"),
         thumb_style: (fg: "blue", bg: "#1e2030"),
@@ -35,52 +47,76 @@
         ends_style: (),
         thumb_style: (fg: "blue"),
     ),
-    song_table_format: [
-        (
-            prop: (kind: Property(Artist),
-                default: (kind: Text("Unknown"))
+
+    // https://mierak.github.io/rmpc/next/configuration/layout/
+    // layout & components
+    layout: Split(
+        direction: Vertical,
+        panes: [
+            (
+                size: "24%",
+                pane: Split(
+                    direction: Horizontal,
+                    panes: [
+                        (
+                            size: "20%",
+                            pane: Pane(AlbumArt),
+                            borders: "RIGHT",
+                        ),
+                        (
+                            size: "80%",
+                            pane: Split(
+                                direction: Vertical,
+                                panes: [
+                                    (size: "20%", pane: Pane(Header)),
+                                    (size: "70%", pane: Pane(Cava)),
+                                    (size: "10%", pane: Pane(ProgressBar)),
+                                ]
+                            )
+                        ),
+                    ]
+                ),
             ),
-            width: "20%",
-        ),
-        (
-            prop: (kind: Property(Title),
-                default: (kind: Text("Unknown"))
+            (
+                size: "6%",
+                pane: Pane(Tabs),
             ),
-            width: "35%",
-        ),
-        (
-            prop: (kind: Property(Album), style: (fg: "white"),
-                default: (kind: Text("Unknown Album"), style: (fg: "white"))
+            (
+                size: "70%",
+                pane: Pane(TabContent),
             ),
-            width: "30%",
-        ),
-        (
-            prop: (kind: Property(Duration),
-                default: (kind: Text("-"))
-            ),
-            width: "15%",
-            alignment: Right,
-        ),
-    ],
+        ],
+    ),
+
+
+    // https://mierak.github.io/rmpc/next/configuration/header/
+    // --------------------------------------------------------------------
+    // [Playing/Paused]         Song Title                 Volume: ▁▂▃▄▅▆▇█
+    // 0:38/3:09 (192 kbps)   Artist - Album    Repeat/Random/Cosume/Single
+    // --------------------------------------------------------------------
     header: (
         rows: [
             (
+                // [Playing/Paused/...]
                 left: [
                     (kind: Text("["), style: (fg: "yellow", modifiers: "Bold")),
                     (kind: Property(Status(State)), style: (fg: "yellow", modifiers: "Bold")),
                     (kind: Text("]"), style: (fg: "yellow", modifiers: "Bold"))
                 ],
+                // Song Title
                 center: [
                     (kind: Property(Song(Title)), style: (modifiers: "Bold"),
                         default: (kind: Text("No Song"), style: (modifiers: "Bold"))
                     )
                 ],
+                // Volume: ▁▂▃▄▅▆▇█
                 right: [
                     (kind: Property(Widget(ScanStatus)), style: (fg: "blue")),
                     (kind: Property(Widget(Volume)), style: (fg: "blue"))
                 ]
             ),
             (
+                // 0:38/3:09 (192 kbps)
                 left: [
                     (kind: Property(Status(Elapsed))),
                     (kind: Text(" / ")),
@@ -89,6 +125,7 @@
                     (kind: Property(Status(Bitrate))),
                     (kind: Text(" kbps)"))
                 ],
+                // Artist - Album
                 center: [
                     (kind: Property(Song(Artist)), style: (fg: "yellow", modifiers: "Bold"),
                         default: (kind: Text("Unknown"), style: (fg: "yellow", modifiers: "Bold"))
@@ -98,6 +135,7 @@
                         default: (kind: Text("Unknown Album"))
                     )
                 ],
+                // Repeat/Random/Cosume/Single
                 right: [
                     (
                         kind: Property(Widget(States(
@@ -110,6 +148,44 @@
             ),
         ],
     ),
+
+    // https://mierak.github.io/rmpc/next/configuration/song-table/
+    // Title       Artist       Album       Duration
+    // ----------------------------------------------
+    show_song_table_header: true, // NOTE: enable it
+    song_table_album_separator: None,
+    song_table_format: [
+        (
+            prop: (kind: Property(Title), style: (fg: "#68727A"),
+                default: (kind: Text("Unknown"))
+            ),
+            width: "35%",
+        ),
+        (
+            prop: (kind: Property(Artist), style: (fg: "#e5c76b"),
+                default: (kind: Text("Unknown"), style: (fg: "white"))
+            ),
+            width: "20%",
+            alignment: Left,
+        ),
+        (
+            prop: (kind: Property(Album), style: (fg: "#6cbfbf"),
+                default: (kind: Text("Unknown Album"), style: (fg: "white"))
+            ),
+            width: "30%",
+        ),
+        (
+            prop: (kind: Property(Duration), style: (fg: "white", modifiers: "Italic"),
+                default: (kind: Text("-"))
+            ),
+            width: "15%",
+            alignment: Right,
+        ),
+    ],
+
+    preview_label_style: (fg: "yellow"),
+    preview_metadata_group_style: (fg: "yellow", modifiers: "Bold"),
+    browser_column_widths: [20, 38, 42],
     browser_song_format: [
         (
             kind: Group([
@@ -126,6 +202,7 @@
             default: (kind: Property(Filename))
         ),
     ],
+
     // https://mierak.github.io/rmpc/next/configuration/cava/
     cava: (
         // symbols that will be used to draw the bar in the visualiser, in ascending order of
@@ -135,8 +212,9 @@
         // "Horizontal" and "Top"
         inverted_bar_symbols: ['▔', '🮂', '🮃', '▀', '🮄', '🮅', '🮆', '█'],
 
+        // TODO: Background transparent ?
         bg_color: "black", // background color, defaults to rmpc's bg color if not provided
-        bar_width: 1, // width of a single bar in columns
+        bar_width: 1,   // width of a single bar in columns
         bar_spacing: 1, // free space between bars in columns
 
         // Possible values are "Top", "Bottom" and "Horizontal". Top makes the bars go from top to
@@ -144,6 +222,7 @@
         // both down and up from there.
         // Using non-default symbols with "Top" and "Horizontal" may produce undesired output.
         orientation: Bottom,
+        // orientation: Horizontal,
 
         // Colors can be configured in three different ways: a single color, different colors
         // per row and a gradient. You can use the same colors as everywhere else. Only specify
@@ -156,11 +235,11 @@
         // and the rest will be blue. You can have as many as you want here. The last value
         // will be used if the height exceeds the length of this array.
         // bar_color: Rows([
-        //    "red",
-        //    "red",
-        //    "green",
-        //    "green",
-        //    "blue",
+        //   "red",
+        //   // "red",
+        //   "green",
+        //   // "green",
+        //   "blue",
         // ])
 
         // A simple color gradient. This is a map where keys are percent values of the height
@@ -170,7 +249,7 @@
         // 0 and 100 and if the first or last key are not 0 and 100 respectively, the lowest and highest
         // value will be used as 0 and 100. Only hex and RGB colors are supported here and your terminal
         // must support them as well!
-        bar_color: Gradient({
+         bar_color: Gradient({
            // 0: "rgb(  0, 255,   0)",
            // 50: "rgb(  0,   0, 255)",
            // 100: "rgb(255,   0,   0)",
@@ -182,6 +261,6 @@
            75:  "#c47fd5",
            90:  "#6cbfbf",
            100: "#b3b9b8",
-        })
+         })
     ),
 )

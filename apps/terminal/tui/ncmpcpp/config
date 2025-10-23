@@ -7,6 +7,8 @@
 # - https://pkgbuild.com/~jelle/ncmpcpp/
 
 
+# NOTE: "It appears binding an address to a Unix socket is not supported."
+
 
 ##### directories ######
 ##
@@ -26,7 +28,7 @@ lyrics_directory = ~/Music/ncmpcpp
 #mpd_host = localhost
 #mpd_port = 6600
 #mpd_password = ""
-#mpd_connection_timeout = 5
+mpd_connection_timeout = 5
 
 ## Needed for tag editor and file operations to work.
 #mpd_music_dir = ~/Music
@@ -69,7 +71,7 @@ visualizer_data_source = "/tmp/mpd.fifo" # -> mpd's FIFO audio_output.path
 ## provides data for visualizer and reset it at the beginning of visualization
 ## to synchronize with audio.
 ##
-visualizer_output_name = "visualization_fifo" # -> mpd's FIFO audio_output.name
+visualizer_output_name = "FIFO visualizer" # -> mpd's FIFO audio_output.name
 
 ## If you set format to 44100:16:2, make it 'yes'.
 visualizer_in_stereo = yes
@@ -83,10 +85,10 @@ visualizer_in_stereo = yes
 ##
 ## Available values: spectrum, wave, wave_filled, ellipse.
 visualizer_type = "spectrum" # spectrum/ellipse/wave_filled/wave
-visualizer_fps = 60
+visualizer_fps = 120
 #visualizer_autoscale = no
 visualizer_look = "+|" # ●▮
-#visualizer_color = blue, cyan, green, yellow, magenta, red
+visualizer_color = blue, cyan, green, yellow, magenta, red
 
 ## Alternative subset of 256 colors for terminals that support it.
 #visualizer_color = 47, 83, 119, 155, 191, 227, 221, 215, 209, 203, 197, 161
@@ -110,14 +112,14 @@ visualizer_spectrum_smooth_look = yes
 ## A value between 1 and 5 inclusive. Specifying a larger value makes the
 ## visualizer look at a larger slice of time, which results in less jumpy
 ## visualizer output.
-#visualizer_spectrum_dft_size = 2
-#visualizer_spectrum_gain = 10
+visualizer_spectrum_dft_size = 1
+visualizer_spectrum_gain = 4
 
 ## Left-most frequency of visualizer in Hz, must be less than HZ MAX
-#visualizer_spectrum_hz_min = 20
+visualizer_spectrum_hz_min = 20
 
 ## Right-most frequency of visualizer in Hz, must be greater than HZ MIN
-#visualizer_spectrum_hz_max = 20000
+visualizer_spectrum_hz_max = 20000
 
 ## Use log scaling for the frequency spectrum axes
 #visualizer_spectrum_log_scale_x = yes
@@ -142,7 +144,7 @@ visualizer_spectrum_smooth_look = yes
 ## Time of inactivity (in seconds) after playlist highlighting will be disabled
 ## (0 = always on).
 ##
-#playlist_disable_highlight_delay = 5
+playlist_disable_highlight_delay = 0
 
 ## Defines how long messages are supposed to be visible.
 ##
@@ -222,14 +224,14 @@ visualizer_spectrum_smooth_look = yes
 #song_library_format = {%n - }{%t}|{%f}
 #alternative_header_first_line_format = $b$1$aqqu$/a$9 {%t}|{%f} $1$atqq$/a$9$/b
 #alternative_header_second_line_format = {{$4$b%a$/b$9}{ - $7%b$9}{ ($4%y$9)}}|{%D}
-#current_item_prefix = $(yellow)$r
+current_item_prefix = $(cyan)$r
 #current_item_suffix = $/r$(end)
-#current_item_inactive_column_prefix = $(white)$r
+current_item_inactive_column_prefix = $(blue)$r
 #current_item_inactive_column_suffix = $/r$(end)
-#now_playing_prefix = $b
-#now_playing_suffix = $/b
+now_playing_prefix = $b$(yellow)$r
+now_playing_suffix = $/r$/b$(end)
 #browser_playlist_prefix = "$2playlist$9 "
-#selected_item_prefix = $6
+selected_item_prefix = $4
 #selected_item_suffix = $9
 #modified_item_prefix = $3> $9
 
@@ -281,6 +283,7 @@ visualizer_spectrum_smooth_look = yes
 ##   available.
 ##
 #song_columns_list_format = (20)[]{a} (6f)[green]{NE} (50)[white]{t|f:Title} (20)[cyan]{b} (7f)[magenta]{l}
+song_columns_list_format = (20)[]{a} (6f)[green]{NE} (50)[cyan]{t|f:Title} (20)[cyan]{b} (7f)[magenta]{l}
 
 
 ##### various settings #####
@@ -378,37 +381,37 @@ visualizer_spectrum_smooth_look = yes
 
 ## Note: You can define startup screen by choosing screen from the list above.
 ##
-#startup_screen = playlist
+startup_screen = playlist
 
 ## NOTE: You can define startup slave screen by choosing screen from the list
 ## above or an empty value for no slave screen.
 ##
-#startup_slave_screen = ""
-#startup_slave_screen_focus = no
+startup_slave_screen = ""
+startup_slave_screen_focus = yes
 
 ## Default width of locked screen (in %).  Acceptable values are from 20 to 80.
 ##
-#locked_screen_width_part = 50
-#ask_for_locked_screen_width_part = yes
+locked_screen_width_part = 60
+ask_for_locked_screen_width_part = no
 
 ## Width of media_library screen columns
 ##
-#media_library_column_width_ratio_two = 1:1
-#media_library_column_width_ratio_three = 1:1:1
+media_library_column_width_ratio_two = 1:2
+media_library_column_width_ratio_three = 3:3:2
 
 ## Width of playlist_editor screen columns
 ##
 #playlist_editor_column_width_ratio = 1:2
-#jump_to_now_playing_song_at_start = yes
-#ask_before_clearing_playlists = yes
-#clock_display_seconds = no
-#display_volume_level = yes
-#display_bitrate = no
+jump_to_now_playing_song_at_start = yes
+ask_before_clearing_playlists = yes
+clock_display_seconds = no
+display_volume_level = yes
+display_bitrate = yes
 #display_remaining_time = no
 
 ## Available values: none, basic, extended, perl.
 ##
-#regular_expressions = perl
+regular_expressions = extended
 
 ## NOTE: if below is enabled, ncmpcpp will ignore leading "The" word while
 ## sorting items in browser, tags in media library, etc.
@@ -443,11 +446,11 @@ visualizer_spectrum_smooth_look = yes
 ##       database and local one for searching in current playlist)
 ##
 #search_engine_default_search_mode = 1
-#external_editor = nano
+external_editor = vim
 
 ## NOTE: set to yes if external editor is a console application.
 ##
-#use_console_editor = yes
+use_console_editor = yes
 
 
 ##### colors definitions #####
@@ -486,7 +489,7 @@ visualizer_spectrum_smooth_look = yes
 #volume_color = default
 #state_line_color = default
 #state_flags_color = default:b
-#main_window_color = yellow
+main_window_color = 188
 #color1 = white
 #color2 = green
 #progressbar_color = black:b
