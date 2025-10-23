@@ -16,6 +16,9 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 ./deploy.sh -m <MANIFEST>   # specify a manifest file
 ```
 
+> [!NOTE]
+> Tip: You can run `./deploy.sh -f` to make a backup; it will save the previous state before you modify local files.
+
 ## Packages
 
 ```sh
