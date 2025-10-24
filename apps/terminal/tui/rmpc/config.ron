@@ -22,9 +22,14 @@
     status_update_interval_ms: 1000,
 
     // Triggers
-    on_song_change: ["~/.config/rmpc/bin/playcount"], // when the song changes
+    on_song_change: ["~/.config/rmpc/bin/notify",
+                     "~/.config/rmpc/bin/playcount"], // when the song changes
     select_current_song_on_change: false,
     keep_state_on_song_change: true,
+
+    // TODO: Themes must be designed for different sizes.
+    //
+    // on_resize: ["~/.config/rmpc/bin/onresize"], // auto change theme for different size.
 
     // Misc
     volume_step: 5,

@@ -52,11 +52,13 @@ apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
 apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
 apps/terminal/tui/rmpc/themes/default.ron|symlink|.config/rmpc/themes
 apps/terminal/tui/rmpc/bin/playcount|symlink|.config/rmpc/bin
+apps/terminal/tui/rmpc/bin/notify|symlink|.config/rmpc/bin
+apps/terminal/tui/rmpc/assets/default_alubm_art.png|copy|.config/rmpc/assets
+### go-musicfox (!!!hardcode)
+apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox
 ### atuin (!!!hardcode)
 apps/terminal/tui/atuin/config.toml|symlink|.config/atuin
 apps/terminal/tui/atuin/atuin-receipt.jsonc|symlink|.config/atuin
-### go-musicfox (!!!hardcode)
-apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox
 ### satty
 apps/terminal/satty/config.toml|symlink|.config/satty
 
