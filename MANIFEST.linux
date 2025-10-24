@@ -31,6 +31,7 @@ apps/terminal/cli/aria2/aria2.conf|symlink|.config/aria2
 ### github-cli
 apps/terminal/cli/gh/config.yml|symlink|.config/gh
 apps/terminal/cli/gh/hosts.yml|symlink|.config/gh
+
 ### htop
 apps/terminal/tui/htop/htoprc|symlink|.config/htop
 ### btop
@@ -39,8 +40,6 @@ apps/terminal/tui/btop/btop.conf|symlink|.config/btop
 apps/terminal/tui/lazygit/config.yml|symlink|.config/lazygit
 ### lazydocker
 apps/terminal/tui/lazydocker/config.yml|symlink|.config/lazydocker
-### go-musicfox (!!!hardcode)
-apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox
 ### glow
 apps/terminal/tui/glow/glow.yml|symlink|.config/glow
 ### procs
@@ -53,6 +52,11 @@ apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
 apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
 apps/terminal/tui/rmpc/themes/default.ron|symlink|.config/rmpc/themes
 apps/terminal/tui/rmpc/bin/playcount|symlink|.config/rmpc/bin
+### atuin (!!!hardcode)
+apps/terminal/tui/atuin/config.toml|symlink|.config/atuin
+apps/terminal/tui/atuin/atuin-receipt.jsonc|symlink|.config/atuin
+### go-musicfox (!!!hardcode)
+apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox
 ### satty
 apps/terminal/satty/config.toml|symlink|.config/satty
 
