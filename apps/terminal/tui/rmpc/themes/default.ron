@@ -50,11 +50,12 @@
 
     // https://mierak.github.io/rmpc/next/configuration/layout/
     // layout & components
+    // NOTE: Because terminal font size affects display, you may need to adjust the size manually.
     layout: Split(
         direction: Vertical,
         panes: [
             (
-                size: "24%",
+                size: "15",
                 pane: Split(
                     direction: Horizontal,
                     panes: [
@@ -212,8 +213,7 @@
         // "Horizontal" and "Top"
         inverted_bar_symbols: ['▔', '🮂', '🮃', '▀', '🮄', '🮅', '🮆', '█'],
 
-        // TODO: Background transparent ?
-        bg_color: "black", // background color, defaults to rmpc's bg color if not provided
+        // bg_color: "black", // background color, defaults to rmpc's bg color if not provided
         bar_width: 1,   // width of a single bar in columns
         bar_spacing: 1, // free space between bars in columns
 
