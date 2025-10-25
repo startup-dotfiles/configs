@@ -16,6 +16,10 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 ./deploy.sh -m <MANIFEST>   # specify a manifest file
 ```
 
+> [!WARNING]
+> `./deploy.sh` uses `MANIFEST.linux` by default, typically for a full deployment. If you only want to install part of it,
+> refer to the files in the `recipes` directory I provided and use the `-m` option to specify a file.
+
 > [!NOTE]
 > Tip: You can run `./deploy.sh -f` to make a backup; it will save the previous state before you modify local files.
 
