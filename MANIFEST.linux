@@ -44,8 +44,6 @@ apps/terminal/tui/lazydocker/config.yml|symlink|.config/lazydocker
 apps/terminal/tui/glow/glow.yml|symlink|.config/glow
 ### procs
 apps/terminal/tui/procs/config.toml|symlink|.config/procs
-### neomutt
-apps/terminal/tui/neomutt/neomuttrc|symlink|.config/neomutt
 ### ncmpcpp
 apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
 ### rmpc
@@ -64,11 +62,11 @@ apps/terminal/satty/config.toml|symlink|.config/satty
 
 ## [Flags]
 apps/flags/chromium-flags.conf|symlink|.config
-# apps/flags/vivaldi-stable.conf|symlink|.config
+apps/flags/vivaldi-stable.conf|symlink|.config
 apps/flags/electron-flags.conf|symlink|.config
 apps/flags/code-flags.conf|symlink|.config
 apps/flags/codium-flags.conf|symlink|.config
-# apps/flags/bilibili-flags.conf|symlink|.config
+apps/flags/bilibili-flags.conf|symlink|.config
 apps/flags/qq-flags.conf|symlink|.config
 apps/flags/spotify-launcher.conf|symlink|.config
 
@@ -87,15 +85,15 @@ etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfi
 
 ## [KDE Plasma]
 ### plasma-workspace
-# etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
-# etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
+etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
+etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
 
 ## [Arch Linux]
 ### pacman
-# etc/pacman/makepkg.conf|symlink|.config/pacman
-# etc/pacman/makepkg-clang.conf|symlink|.config/pacman
+etc/pacman/makepkg.conf|symlink|.config/pacman
+etc/pacman/makepkg-clang.conf|symlink|.config/pacman
 ### yay
-# etc/yay/config.json|symlink|.config/yay
+etc/yay/config.json|symlink|.config/yay
 
 # <------------------------------------------------------------ ends Environment
 

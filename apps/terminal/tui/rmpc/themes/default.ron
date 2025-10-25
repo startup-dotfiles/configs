@@ -240,7 +240,7 @@
     song_table_format: [
         (
             prop: (kind: Sticker("playCount"),  // NOTE: see `on_song_change` in config.ron and the bin/playcount script
-                default: (kind: Text("Unknown")),
+                default: (kind: Text("0")),
             ),
             width: "5%",
         ),

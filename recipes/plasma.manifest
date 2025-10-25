@@ -1,0 +1,6 @@
+## KDE Plasma (DE)
+
+
+## plasma-workspace
+#etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
+#etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env

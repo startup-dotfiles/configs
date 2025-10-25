@@ -1,0 +1,11 @@
+## Package Managers
+
+
+## [Arch Linux]
+##
+## pacman
+etc/pacman/makepkg.conf|symlink|.config/pacman
+etc/pacman/makepkg-clang.conf|symlink|.config/pacman
+##
+## yay
+etc/yay/config.json|symlink|.config/yay

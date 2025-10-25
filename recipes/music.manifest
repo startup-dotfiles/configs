@@ -1,0 +1,52 @@
+## Music Player
+
+## Requirements:
+## - Deamon: mpd
+## - CLI: mpc
+## - Clients:
+##     - ncmpcpp
+##     - rmpc
+
+
+## NOTE: My configuration is set up to run with user permissions by default,
+##  which means no permission changes are required to use it.
+##
+## Only enable the user service
+## system --user enable --now mpd.service
+##
+## mpd (Deamon)
+services/mpd/mpd.conf|symlink|.config/mpd
+
+## NOTE: MPD also needs audio backends, such as PipeWire or ALSA. You need to install them.
+## These packages's default configuration works out of the box.
+## Here are some of my personal settings for reference.
+##
+## pipewire (Audio backend)
+#services/pipewire/pipewire.conf.d/10-sound.conf|symlink|.config/pipewire/pipewire.conf.d
+#services/pipewire/pipewire.conf.d/20-no-resampling.conf|symlink|.config/pipewire/pipewire.conf.d
+
+## NOTE: MPD' clients
+## Although I minimized hardcoding so it works without changes, some settings had to be hardcoded.
+## Because they can't read environment variables or for other reasons — you should check them to ensure they work on your device.
+##
+## ncmpcpp (MPD TUI client)
+apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
+
+## WARNING: hardcode
+##
+## rmpc (MPD TUI client)
+apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
+apps/terminal/tui/rmpc/themes/default.ron|symlink|.config/rmpc/themes
+apps/terminal/tui/rmpc/bin/playcount|symlink|.config/rmpc/bin
+apps/terminal/tui/rmpc/bin/notify|symlink|.config/rmpc/bin
+apps/terminal/tui/rmpc/assets/default_alubm_art.png|copy|.config/rmpc/assets
+
+
+
+## NOTE: This is a third-party NetEase Cloud Music client intended for users in mainland China only.
+## It's not directly related to MPD; you can ignore it.
+##
+## WARNING: hardcode
+##
+##go-musicfox (NetEase Music TUI client)
+#apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox

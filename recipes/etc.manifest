@@ -1,0 +1,17 @@
+## Environments
+
+
+## NOTE: You need to install `xdg-user-dirs`
+## In fact, you can run this `xdg-user-dirs-update` — it will generate that file.
+## And it will create these XDG User dirs.
+## This is typically required by some file managers, such as `Dolphin` and `Nautilus`.
+##
+## user-dirs
+etc/user-dirs.dirs|symlink|.config
+etc/user-dirs.locale|symlink|.config
+
+## NOTE: Usually the default configuration is sufficient. Here are some of my personal font settings for reference.
+##
+## fontconfig
+etc/fontconfig/fonts.conf|symlink|.config/fontconfig
+etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfig/conf.d

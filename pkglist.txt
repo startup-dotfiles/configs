@@ -1,3 +1,5 @@
+jq
+
 # Coding
 marksman
 
@@ -16,7 +18,7 @@ btop
 cava
 glow
 procs
-neomutt
+#neomutt
 lazygit
 lazydocker
 
