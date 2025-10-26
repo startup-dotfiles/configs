@@ -36,11 +36,9 @@ apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
 ##
 ## rmpc (MPD TUI client)
 apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
-apps/terminal/tui/rmpc/themes/default.ron|symlink|.config/rmpc/themes
-apps/terminal/tui/rmpc/bin/playcount|symlink|.config/rmpc/bin
-apps/terminal/tui/rmpc/bin/notify|symlink|.config/rmpc/bin
-apps/terminal/tui/rmpc/assets/default_alubm_art.png|copy|.config/rmpc/assets
-
+apps/terminal/tui/rmpc/themes|symlink|.config/rmpc
+apps/terminal/tui/rmpc/bin|symlink|.config/rmpc
+apps/terminal/tui/rmpc/assets|copy|.config/rmpc
 
 
 ## NOTE: This is a third-party NetEase Cloud Music client intended for users in mainland China only.
