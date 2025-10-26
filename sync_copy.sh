@@ -25,7 +25,9 @@ ACTION="$(tput setaf 6)[ACTION]$(tput sgr0)"
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 MANIFEST="${SCRIPT_DIR}/MANIFEST.linux"
-BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%d-%H%M%S)"
+BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
+SOURCES=()
+EXCLUDES=()
 
 is_help_mode=0
 
@@ -43,6 +45,23 @@ is_same_mtime() {
     else
         return 1
     fi
+}
+
+splitDir() {
+    if [ -f "$1" ] || [ -L "$1" ]; then
+        return
+    fi
+
+    local root_dir=$1
+    local all_paths
+
+    while IFS= read -r -d '' path; do
+        all_paths+=("$path")
+    done < <(find "$root_dir" -mindepth 1 -print0)
+
+    for p in "${all_paths[@]}"; do
+        echo "$p"
+    done
 }
 
 copyFile() {
@@ -65,8 +84,16 @@ copyFile() {
         source=${source_dir}/$newname
     fi
 
-    # Ensure the target directory exists
-    mkdir -p "$target_dir"
+    # if [[ "${#EXCLUDES[@]}" -ne 0 ]]; then
+    #    printf "${SKY_BLUE}[TODO]${RESET}: need to handle excluded paths (%d). \n" "${#EXCLUDES[@]}"
+    #    exit 1
+    # fi
+
+    # Ensure the source files/directories exists
+    if [ ! -e "$source" ]; then
+        printf "${ERROR} ${YELLOW}%s${RESET} does not exist - please check your MANIFEST file.\n" "$source"
+        exit 1
+    fi
 
     # If the target file or directory already exists in your home directory and is a symbolic link,
     # Just skiping it.
@@ -75,7 +102,7 @@ copyFile() {
         return
     fi
 
-    if [ -e "$source" ]; then
+    if [ -e "$target" ]; then
         # NOTE: If the file or directory has not been modified, it does not need to be backed up.
         if ! is_same_mtime "$source" "$target"; then
             mkdir -p "$backup_dir"
@@ -84,17 +111,63 @@ copyFile() {
         fi
     fi
 
+    # If the target file or directory does not exists, create the target directory.
+    mkdir -p "$target_dir"
+
     # Finally, if the above steps complete without issues,
     # the corresponding source file or directory from the repository
     # will be copied into the target directory.
     # NOTE: However, if the target file or directory is identical to the corresponding file or directory in the repository,
     # it means the item has not been modified and does not need to be copied.
-    if ! is_same_mtime "$source" "$target"; then
+    if ! is_same_mtime "$source" "$target" || [ ! -e "$target" ]; then
         cp -p -r "$source" "$target"
         printf "${OK} ${YELLOW}%s${RESET} has been copied to ${SKY_BLUE}%s${RESET}\n" "$source" "$target"
     else
         printf "${INFO} ${SKY_BLUE}%s${RESET} was not modified — skipping. \n" "$target"
     fi
+}
+
+excludeFile() {
+    local file_or_dir="$1"
+    local source_dir="$HOME/$2"
+    local target_dir="$SCRIPT_DIR"
+    local backup_dir="$BACKUP_DIR/$(dirname "$file_or_dir")"
+    local newname="$3"
+
+    # // -> /
+    if [ -z "$2" ]; then
+        source_dir="$HOME"
+    fi
+
+    # Source and target files/directories
+    local source="${source_dir}/$(basename "$file_or_dir")"
+    local target="${target_dir}/$file_or_dir"
+
+    if [ ! -z "$newname" ]; then
+        source=${source_dir}/$newname
+    fi
+
+    # If the files or directories to be excluded already exist in your home directory and is a symbolic link,
+    # remove this symlink directly and move the excluded files and directories back to your $HOME directory.
+    if [ -L "$source" ]; then
+        unlink "$source"
+        mv "$target" -t "$source"
+        return
+    fi
+
+    # If the files or directories to be excluded already exist in the repository,
+    # move them to the backup directory and prompt the user to update the corresponding MANIFEST file
+    # by moving the exclude entries before the related entries so this does not happen on the next sync.
+    if [ -e "$target" ]; then
+        # Backup target files to $backup_dir
+        mkdir -p "$backup_dir"
+        mv "$target" -t "$backup_dir"
+        printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}. You should list entries to be excluded before the related entries.\n" "$target" "$backup_dir"
+        return
+    fi
+
+    EXCLUDES+=("${source}")
+    printf "${WARN} ${YELLOW}%s${RESET} has been excluded.\n" "$source"
 }
 
 syncRepoAndHome() {
@@ -109,10 +182,16 @@ syncRepoAndHome() {
         fi
 
         repofile="$(echo "$row" | cut -d \| -f 1)"
+        operation="$(echo "$row" | cut -d \| -f 2)"
         destination="$(echo "$row" | cut -d \| -f 3)"
         newname="$(echo "$row" | cut -d \| -f 4)"
 
-        copyFile "$repofile" "$destination" "$newname"
+        if [[ $operation == "exclude" ]]; then
+            excludeFile "$repofile" "$destination" "$newname"
+        else
+            copyFile "$repofile" "$destination" "$newname"
+            EXCLUDES=()
+        fi
     done <"$MANIFEST"
 }
 
