@@ -4,7 +4,7 @@ Configuration files scattered across various locations.
 
 ## Usage
 
-Use `./deploy.sh` to install files from this repository into the specified locations under $HOME according to the rules in `MANIFEST.linux`.
+Use `./deploy.sh` to install files from this repository into the specified locations under `$HOME` according to the rules in `MANIFEST.linux`.
 Of course, the script automatically backs up files to the backup directory before installing.
 You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./MANIFEST.linux) for details.
 
@@ -20,7 +20,7 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 
 > [!WARNING]
 > `./deploy.sh` uses `MANIFEST.linux` by default, typically for a full deployment. If you only want to install part of it,
-> refer to the files in the `recipes` directory I provided and use the `-m` option to specify a file.
+> refer to the files in the [recipes](./recipes/) directory I provided and use the `-m` option to specify a file.
 
 > [!WARNING]
 > `./deploy.sh` supports two deployment methods: `copy` or `symlink`. It parses the input MANIFEST file and uses the operation field
@@ -63,7 +63,11 @@ apps/coding/.clangd||.config/clangd|config.yaml         # Use -o option
 
 ### Sync with copying
 
-For files or directories deployed via symlink, synchronization with the repository happens automatically. For those deployed via copy, if you want to sync locally modified files back to the repository, use the `sync_copy.sh` script. Its usage is very similar to deploy.sh, except the direction of deployment is reversed.
+For files or directories deployed via symlink, synchronization with the repository happens automatically. For those deployed via copy, if you want to sync locally modified files back to the repository, use the `sync_copy.sh` script. Its usage is very similar to `deploy.sh`, except the direction of deployment is reversed.
+
+### Migration
+
+If you want to create your own repository to manage `$HOME` directory, download the two scripts ([deploy.sh](./deploy.sh) and [sync_copy.sh](./sync_copy.sh)), use [MANIFEST.linux](./MANIFEST.linux) as a reference to write your own manifest, and update the default MANIFEST variable in the scripts. To initialize the repository, run `sync_copy.sh` to copy the files or directories from your local `$HOME` that you want to manage into the repository. To manage files via symlinks or deploy your config files to other machines, run `deploy.sh`. In short: use `sync_copy.sh` for regular maintenance, and `deploy.sh` to deploy configurations to other machines.
 
 ## References
 
