@@ -11,6 +11,7 @@ You can choose to install files by `copy` or `symlink`; see [MANIFEST.linux](./M
 ```sh
 # The script provides several options.
 ./deploy.sh                   # Install them into your $HOME
+./deploy.sh -d                # show sources and targets
 ./deploy.sh -h                # only offer help info
 ./deploy.sh -f                # force write (with backup)
 ./deploy.sh -m <MANIFEST>     # specify a manifest file
@@ -52,13 +53,36 @@ Each valid MANIFEST entry must include at least two fields: `file_or_dir` and `d
 ```txt
 # For example
 ## Incorrent:
-appsps/coding/.clangd|.config/clangd|config.yaml     # Unknown operation .config/clangd
-appsps/coding/.clangd|???|.config/clangd|config.yaml # Unknown operation ???.
+clangd | apps/coding | clangd/config.yaml |           .config  # Unknown operation clangd/config.yaml
+clangd | apps/coding | clangd/config.yaml | ???     | .config  # Unknown operation ???.
 
 ## Corrent:
-apps/coding/.clangd|copy|.config/clangd|config.yaml
-apps/coding/.clangd|symlink|.config/clangd|config.yaml
-apps/coding/.clangd||.config/clangd|config.yaml         # Use -o option
+clangd | apps/coding | clangd/config.yaml | symlink | .config
+clangd | apps/coding | clangd/config.yaml | symlink | .config
+clangd | apps/coding | clangd/config.yaml |         | .config  # Use -o option
+```
+
+### I used `exclude`, but it was still copied/symlinked ?
+
+> [!WARNING]
+> If you use exclude to skip specific paths, it must be placed above the copy/symlink entry with the same name (appname)
+> otherwise it will not be excluded.
+
+```
+## Corrent:
+btop         | apps/terminal/tui | btop/btop.log | exclude | .config # OK
+btop         | apps/terminal/tui | btop/themes/  | exclude | .config # OK
+btop         | apps/terminal/tui | btop/         | symlink | .config
+
+## Incorrent:
+btop         | apps/terminal/tui | btop/         | symlink | .config
+btop         | apps/terminal/tui | btop/btop.log | exclude | .config  # still be copied/symlinked
+btop         | apps/terminal/tui | btop/themes/  | exclude | .config  # still be copied/symlinked
+
+## Incorrent:
+btop         | apps/terminal/tui | btop/btop.log | exclude | .config  # OK
+btop         | apps/terminal/tui | btop/         | symlink | .config
+btop         | apps/terminal/tui | btop/themes/  | exclude | .config  # still be copied/symlinked
 ```
 
 ### Sync with copying
@@ -67,7 +91,7 @@ For files or directories deployed via symlink, synchronization with the reposito
 
 ### Migration
 
-If you want to create your own repository to manage `$HOME` directory, download the two scripts ([deploy.sh](./deploy.sh) and [sync_copy.sh](./sync_copy.sh)), use [MANIFEST.linux](./MANIFEST.linux) as a reference to write your own manifest, and update the default MANIFEST variable in the scripts. To initialize the repository, run `sync_copy.sh` to copy the files or directories from your local `$HOME` that you want to manage into the repository. To manage files via symlinks or deploy your config files to other machines, run `deploy.sh`. In short: use `sync_copy.sh` for regular maintenance, and `deploy.sh` to deploy configurations to other machines.
+If you want to create your own repository to manage `$HOME` directory, download the two scripts ([deploy.sh](./deploy.sh) and [sync_copy.sh](./sync_copy.sh)) and the `scripts/global.sh` script. Using [MANIFEST.linux](./MANIFEST.linux) as a reference to write your own manifest, and update the default MANIFEST variable in the scripts. To initialize the repository, run `sync_copy.sh` to copy the files or directories from your local `$HOME` that you want to manage into the repository. To manage files via symlinks or deploy your config files to other machines, run `deploy.sh`. In short: use `sync_copy.sh` for regular maintenance, and `deploy.sh` to deploy configurations to other machines.
 
 ## References
 
