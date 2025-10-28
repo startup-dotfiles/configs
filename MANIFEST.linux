@@ -96,8 +96,8 @@ xdg-user-dirs    | etc | user-dirs.dirs    | symlink | .config
 xdg-user-dirs    | etc | user-dirs.locale  | symlink | .config
 fontconfig       | etc | fontconfig/       | symlink | .config
 
-plasma-workspace | etc | plasma-workspace/shutdown | exclude | .config
-plasma-workspace | etc | plasma-workspace/         | symlink | .config
+plasma-workspace | etc | plasma-workspace/shutdown/ | exclude | .config
+plasma-workspace | etc | plasma-workspace/          | symlink | .config
 
 pacman           | etc | pacman/           | symlink | .config
 yay              | etc | yay/              | symlink | .config

@@ -189,12 +189,6 @@ excludeFile() {
     local target_dir="$(dirname "$target")"
     local backup_dir="$REPO_BACKUP_DIR/$BACKUP_REPO_SUFFIX"
 
-    # If the source file or directory does not exist, return immediately.
-    if [ ! -e "$source" ]; then
-        reset_status
-        return
-    fi
-
     # If the files or directories to be excluded already exist in your $HOME directory and is a symbolic link,
     # remove this symlink directly and move the excluded files and directories back to your $HOME directory.
     if [ -L "$target" ]; then
