@@ -8,7 +8,8 @@ set -e
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 MANIFEST="${SCRIPT_DIR}/MANIFEST.linux"
-BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
+HOME_BACKUP_DIR="${SCRIPT_DIR}/__backup__/home_backup/$(date +%y-%m-%d-%H%M%S)"
+REPO_BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
 
 if ! source "${SCRIPT_DIR}/scripts/global_fn.sh"; then
     echo "Error: unable to source scripts/global_fn.sh..."
@@ -24,6 +25,8 @@ APP_NAME=""
 SOURCE_PREFIX="$HOME"
 TARGET_PREFIX="$SCRIPT_DIR"
 OPERATION=""
+BACKUP_HOME_SUFFIX=""
+BACKUP_REPO_SUFFIX=""
 
 is_help_mode=0
 is_debug_mode=0
@@ -33,10 +36,11 @@ reset_status() {
     SOURCE_PREFIX="$HOME"
     TARGET_PREFIX="$SCRIPT_DIR"
     OPERATION=""
+    BACKUP_HOME_SUFFIX=""
+    BACKUP_REPO_SUFFIX=""
 }
 
 splitDir() {
-
     for i in "${!EXCLUDES[@]}"; do
         EXCLUDES[i]="$(norm "${EXCLUDES[$i]}")"
     done
@@ -79,6 +83,7 @@ copyFile() {
     local source="$1"
     local target="$2"
     local target_dir="$(dirname "$target")"
+    local backup_dir="$REPO_BACKUP_DIR/$BACKUP_REPO_SUFFIX"
 
     # Ensure the source files/directories exists
     if [ ! -e "$source" ]; then
@@ -103,9 +108,9 @@ copyFile() {
         # If the target file or directory does not exist, or has not been modified,
         # it does not need to be backed up.
         if [[ $result -ne 0 ]]; then
-            mkdir -p "$BACKUP_DIR"
-            mv "$target" -t "$BACKUP_DIR"
-            printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
+            mkdir -p "$backup_dir"
+            mv "$target" -t "$backup_dir"
+            printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$backup_dir"
         fi
     fi
 
@@ -126,6 +131,7 @@ excludeFile() {
     local source="$1"
     local target="$2"
     local source_dir="$(dirname "$source")"
+    local backup_dir="$REPO_BACKUP_DIR/$BACKUP_REPO_SUFFIX"
 
     # If the source file or directory does not exist, return immediately.
     if [ ! -e "$source" ]; then
@@ -135,7 +141,7 @@ excludeFile() {
         return
     fi
 
-    # If the files or directories to be excluded already exist in your home directory and is a symbolic link,
+    # If the files or directories to be excluded already exist in your $HOME directory and is a symbolic link,
     # remove this symlink directly and move the excluded files and directories back to your $HOME directory.
     if [ -L "$source" ]; then
         unlink "$source"
@@ -150,11 +156,11 @@ excludeFile() {
     # by moving the exclude entries before the related entries so this does not happen on the next sync.
     if [ -f "$target" ] || [ -d "$target" ]; then
         # Backup target files
-        mkdir -p "$BACKUP_DIR"
-        mv "$target" -t "$BACKUP_DIR"
+        mkdir -p "$backup_dir"
+        mv "$target" -t "$backup_dir"
 
         # NOTE: You should list entries to be excluded before the related entries.
-        printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}. \n" "$target" "$BACKUP_DIR"
+        printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}. \n" "$target" "$backup_dir"
     fi
 
     EXCLUDES+=("${source}")
@@ -189,8 +195,12 @@ syncRepoAndHome() {
         fi
         TARGET_PREFIX+="/$target_suffix"
 
+        # $HOME -> $REPO
         source="$SOURCE_PREFIX/$file_or_dir"
         target="$TARGET_PREFIX/$file_or_dir"
+
+        BACKUP_HOME_SUFFIX="$source_suffix/$(dirname "$file_or_dir")"
+        BACKUP_REPO_SUFFIX="$target_suffix/$(dirname "$file_or_dir")"
 
         # DEBUG: INFO
         if [[ $is_debug_mode -ne 0 ]]; then
@@ -211,6 +221,9 @@ syncRepoAndHome() {
                 for path in "${SOURCES[@]}"; do
                     source="$path"
                     target="$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}"
+
+                    BACKUP_HOME_SUFFIX="$(dirname "${source#"$HOME/"}")"
+                    BACKUP_REPO_SUFFIX="$(dirname "${target#"$SCRIPT_DIR/"}")"
 
                     copyFile "$source" "$target"
                 done
