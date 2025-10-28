@@ -9,6 +9,10 @@ Configuration files scattered across various locations.
 - Support deploying and syncing using copy, symlink, and exclude methods.
 - ...
 
+## Limitations
+
+- Currently only applicable to `$HOME`.
+
 ## Usage
 
 Use `./deploy.sh` to install files from this repository into the specified locations under `$HOME` according to the rules in `MANIFEST.linux`.
