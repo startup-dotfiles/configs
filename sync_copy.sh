@@ -103,11 +103,9 @@ copyFile() {
     # If the source file or directory already exists in your home directory,
     # and it is a regular file or directory.
     if [ -d "$source" ] || [ -f "$source" ]; then
-        local result=$(is_same_mtime "$source" "$target")
-
         # If the target file or directory does not exist, or has not been modified,
         # it does not need to be backed up.
-        if [[ $result -ne 0 ]]; then
+        if is_diff_mtime "$source" "$target"; then
             mkdir -p "$backup_dir"
             mv "$target" -t "$backup_dir"
             printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$backup_dir"
@@ -166,7 +164,6 @@ excludeFile() {
     EXCLUDES+=("${source}")
     IS_EXCLUDED=1
     printf "${WARN} ${YELLOW}%s${RESET} has been excluded.\n" "$source"
-
 }
 
 syncRepoAndHome() {
