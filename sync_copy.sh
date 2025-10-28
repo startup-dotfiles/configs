@@ -2,92 +2,83 @@
 
 # shellcheck disable=SC2034
 # shellcheck disable=SC2155
+# shellcheck disable=SC2001
 
 set -e
-
-# If you choose the symlink option, manual syncing is not required.
-
-# Colored text
-RED="$(tput setaf 1)"
-GREEN="$(tput setaf 2)"
-YELLOW="$(tput setaf 3)"
-BLUE="$(tput setaf 4)"
-MAGENTA="$(tput setaf 5)"
-SKY_BLUE="$(tput setaf 6)"
-ORANGE="$(tput setaf 214)"
-RESET="$(tput sgr0)"
-OK="$(tput setaf 2)[OK]$(tput sgr0)"
-ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
-NOTE="$(tput setaf 3)[NOTE]$(tput sgr0)"
-INFO="$(tput setaf 4)[INFO]$(tput sgr0)"
-WARN="$(tput setaf 214)[WARN]$(tput sgr0)"
-ACTION="$(tput setaf 6)[ACTION]$(tput sgr0)"
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 MANIFEST="${SCRIPT_DIR}/MANIFEST.linux"
 BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
+
+if ! source "${SCRIPT_DIR}/scripts/global_fn.sh"; then
+    echo "Error: unable to source scripts/global_fn.sh..."
+    exit 1
+fi
+
+ALL=()
 SOURCES=()
 EXCLUDES=()
+IS_EXCLUDED=0
+
+APP_NAME=""
+SOURCE_PREFIX="$HOME"
+TARGET_PREFIX="$SCRIPT_DIR"
+OPERATION=""
 
 is_help_mode=0
+is_debug_mode=0
 
-is_same_mtime() {
-    local src=$1
-    local tgt=$2
-    if [ ! -e "$src" ] || [ ! -e "$tgt" ]; then
-        return 2
-    fi
-
-    local t1=$(stat -c %Y "$src")
-    local t2=$(stat -c %Y "$tgt")
-    if [ "$t1" -eq "$t2" ]; then
-        return 0
-    else
-        return 1
-    fi
+reset_status() {
+    APP_NAME=""
+    SOURCE_PREFIX="$HOME"
+    TARGET_PREFIX="$SCRIPT_DIR"
+    OPERATION=""
 }
 
 splitDir() {
-    if [ -f "$1" ] || [ -L "$1" ]; then
-        return
-    fi
 
-    local root_dir=$1
-    local all_paths
-
-    while IFS= read -r -d '' path; do
-        all_paths+=("$path")
-    done < <(find "$root_dir" -mindepth 1 -print0)
-
-    for p in "${all_paths[@]}"; do
-        echo "$p"
+    for i in "${!EXCLUDES[@]}"; do
+        EXCLUDES[i]="$(norm "${EXCLUDES[$i]}")"
     done
+
+    local root_dir
+    root_dir="$(norm "$1")"
+    while IFS= read -r -d '' path; do
+        if [ ! -d "$path" ]; then
+            ALL+=("$(norm "$path")")
+        fi
+    done < <(find "$root_dir" -mindepth 1 -print0)
+}
+
+is_excluded() {
+    local target
+    target="$(norm "$1")"
+    for ex in "${EXCLUDES[@]}"; do
+        # Match the excluded directory itself or any of its subitems.
+        if [[ "$target" == "$ex" || "$target" == "$ex/"* ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+filterPaths() {
+    splitDir "$1"
+    for path in "${ALL[@]}"; do
+        if ! is_excluded "$path"; then
+            SOURCES+=("$path")
+        fi
+    done
+
+    # reset
+    ALL=()
+    EXCLUDES=()
 }
 
 copyFile() {
-    local file_or_dir="$1"
-    local source_dir="$HOME/$2"
-    local target_dir="$SCRIPT_DIR"
-    local backup_dir="$BACKUP_DIR/$(dirname "$file_or_dir")"
-    local newname="$3"
-
-    # // -> /
-    if [ -z "$2" ]; then
-        source_dir="$HOME"
-    fi
-
-    # Source and target files/directories
-    local source="${source_dir}/$(basename "$file_or_dir")"
-    local target="${target_dir}/$file_or_dir"
-
-    if [ ! -z "$newname" ]; then
-        source=${source_dir}/$newname
-    fi
-
-    # if [[ "${#EXCLUDES[@]}" -ne 0 ]]; then
-    #    printf "${SKY_BLUE}[TODO]${RESET}: need to handle excluded paths (%d). \n" "${#EXCLUDES[@]}"
-    #    exit 1
-    # fi
+    local source="$1"
+    local target="$2"
+    local target_dir="$(dirname "$target")"
 
     # Ensure the source files/directories exists
     if [ ! -e "$source" ]; then
@@ -95,85 +86,92 @@ copyFile() {
         exit 1
     fi
 
-    # If the target file or directory already exists in your home directory and is a symbolic link,
-    # Just skiping it.
+    # If the source file or directory already exists in your home directory,
+    # but it is a symbolic link, just skiping it.
     if [ -L "$source" ]; then
         printf "${WARN} ${YELLOW}%s${RESET} already symlinked and doesn't need to sync it. skiping...\n" "$source"
+
+        reset_status
         return
     fi
 
-    if [ -e "$target" ]; then
-        # NOTE: If the file or directory has not been modified, it does not need to be backed up.
-        if ! is_same_mtime "$source" "$target"; then
-            mkdir -p "$backup_dir"
-            mv "$target" -t "$backup_dir"
-            printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$backup_dir"
+    # If the source file or directory already exists in your home directory,
+    # and it is a regular file or directory.
+    if [ -d "$source" ] || [ -f "$source" ]; then
+        local result=$(is_same_mtime "$source" "$target")
+
+        # If the target file or directory does not exist, or has not been modified,
+        # it does not need to be backed up.
+        if [[ $result -ne 0 ]]; then
+            mkdir -p "$BACKUP_DIR"
+            mv "$target" -t "$BACKUP_DIR"
+            printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}.\n" "$target" "$BACKUP_DIR"
         fi
     fi
 
     # If the target file or directory does not exists, create the target directory.
     mkdir -p "$target_dir"
 
-    # Finally, if the above steps complete without issues,
-    # the corresponding source file or directory from the repository
-    # will be copied into the target directory.
-    # NOTE: However, if the target file or directory is identical to the corresponding file or directory in the repository,
-    # it means the item has not been modified and does not need to be copied.
-    if ! is_same_mtime "$source" "$target" || [ ! -e "$target" ]; then
-        cp -p -r "$source" "$target"
-        printf "${OK} ${YELLOW}%s${RESET} has been copied to ${SKY_BLUE}%s${RESET}\n" "$source" "$target"
+    # If the target file or directory does not exist, or has been modified,
+    # then the local source and the target repository need to be synchronized.
+    if [[ ! -e "$target" ]]; then
+        cp -p -r "$source" "$target_dir"
+        printf "${OK} ${YELLOW}%s${RESET} has been copied to ${SKY_BLUE}%s${RESET}\n" "$source" "$target_dir"
     else
         printf "${INFO} ${SKY_BLUE}%s${RESET} was not modified — skipping. \n" "$target"
     fi
 }
 
 excludeFile() {
-    local file_or_dir="$1"
-    local source_dir="$HOME/$2"
-    local target_dir="$SCRIPT_DIR"
-    local backup_dir="$BACKUP_DIR/$(dirname "$file_or_dir")"
-    local newname="$3"
+    local source="$1"
+    local target="$2"
+    local source_dir="$(dirname "$source")"
 
-    # // -> /
-    if [ -z "$2" ]; then
-        source_dir="$HOME"
-    fi
+    # If the source file or directory does not exist, return immediately.
+    if [ ! -e "$source" ]; then
+        printf "${WARN} ${YELLOW}%s${RESET} does not exist but excluded - skipping.\n" "$source"
 
-    # Source and target files/directories
-    local source="${source_dir}/$(basename "$file_or_dir")"
-    local target="${target_dir}/$file_or_dir"
-
-    if [ ! -z "$newname" ]; then
-        source=${source_dir}/$newname
+        reset_status
+        return
     fi
 
     # If the files or directories to be excluded already exist in your home directory and is a symbolic link,
     # remove this symlink directly and move the excluded files and directories back to your $HOME directory.
     if [ -L "$source" ]; then
         unlink "$source"
-        mv "$target" -t "$source"
+        mv "$target" -t "$source_dir"
+
+        reset_status
         return
     fi
 
     # If the files or directories to be excluded already exist in the repository,
     # move them to the backup directory and prompt the user to update the corresponding MANIFEST file
     # by moving the exclude entries before the related entries so this does not happen on the next sync.
-    if [ -e "$target" ]; then
-        # Backup target files to $backup_dir
-        mkdir -p "$backup_dir"
-        mv "$target" -t "$backup_dir"
-        printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}. You should list entries to be excluded before the related entries.\n" "$target" "$backup_dir"
-        return
+    if [ -f "$target" ] || [ -d "$target" ]; then
+        # Backup target files
+        mkdir -p "$BACKUP_DIR"
+        mv "$target" -t "$BACKUP_DIR"
+
+        # NOTE: You should list entries to be excluded before the related entries.
+        printf "${WARN} Original ${YELLOW}%s${RESET} has been moved to ${YELLOW}%s${RESET}. \n" "$target" "$BACKUP_DIR"
     fi
 
     EXCLUDES+=("${source}")
+    IS_EXCLUDED=1
     printf "${WARN} ${YELLOW}%s${RESET} has been excluded.\n" "$source"
+
 }
 
 syncRepoAndHome() {
-    local repofile    # e.g. coding/.clang-format
-    local destination # e.g. .config (relative to $HOME)
-    local newname     # e.g. .clangd -> config.yaml
+    local appname
+    local source_suffix
+    local file_or_dir
+    local target_suffix
+    local operation
+
+    local source
+    local target
 
     while IFS= read -r row; do
         # Filter out lines that start with # and empty lines.
@@ -181,18 +179,60 @@ syncRepoAndHome() {
             continue
         fi
 
-        repofile="$(echo "$row" | cut -d \| -f 1)"
-        operation="$(echo "$row" | cut -d \| -f 2)"
-        destination="$(echo "$row" | cut -d \| -f 3)"
-        newname="$(echo "$row" | cut -d \| -f 4)"
+        # Extract fields
+        IFS='|' read -r appname target_suffix file_or_dir \
+            operation source_suffix <<<"$(sed 's/ *| */|/g' <<<"$row")"
+
+        APP_NAME="$appname"
+        if [[ ! -z "$source_suffix" ]]; then
+            SOURCE_PREFIX+="/$source_suffix"
+        fi
+        TARGET_PREFIX+="/$target_suffix"
+
+        source="$SOURCE_PREFIX/$file_or_dir"
+        target="$TARGET_PREFIX/$file_or_dir"
+
+        # DEBUG: INFO
+        if [[ $is_debug_mode -ne 0 ]]; then
+            SOURCE="$source"
+            TARGET="$target"
+            OPERATION="$operation"
+
+            log_info
+            continue
+        fi
 
         if [[ $operation == "exclude" ]]; then
-            excludeFile "$repofile" "$destination" "$newname"
+            excludeFile "$source" "$target"
+            reset_status
         else
-            copyFile "$repofile" "$destination" "$newname"
-            EXCLUDES=()
+            if [[ "$IS_EXCLUDED" -eq 1 ]]; then
+                filterPaths "$source"
+                for path in "${SOURCES[@]}"; do
+                    source="$path"
+                    target="$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}"
+
+                    copyFile "$source" "$target"
+                done
+                IS_EXCLUDED=0
+                SOURCES=()
+                reset_status
+            else
+                copyFile "$source" "$target"
+                reset_status
+            fi
         fi
     done <"$MANIFEST"
+}
+
+log_info() {
+    echo "[AppName]   : $APP_NAME"
+    echo "[Source]    : $SOURCE"
+    echo "[Target]    : $TARGET"
+    echo "[Operation] : $OPERATION"
+    printf '\n'
+
+    reset_status
 }
 
 help() {
@@ -202,7 +242,7 @@ help() {
     echo "  -h : display available options"
 }
 
-optstrings=":h :m:"
+optstrings=":hd :m:"
 while getopts "${optstrings}" opt; do
     case ${opt} in
     h)
@@ -212,6 +252,9 @@ while getopts "${optstrings}" opt; do
     m)
         MANIFEST="${OPTARG}"
         printf "${INFO} Use custom MANIFEST: %s\n" "$(realpath "$MANIFEST")"
+        ;;
+    d)
+        is_debug_mode=1
         ;;
     *)
         echo "Invalid option: -${OPTARG}."
