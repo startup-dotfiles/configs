@@ -48,7 +48,7 @@ yay -S --needed - < pkglist-aur.txt
 
 ### Unknown operation xxx. Skipping
 
-Each valid MANIFEST entry must include at least two fields: `file_or_dir` and `destination`. Because the operation field sits between these two, the script will still parse that field even if you specify a default operation with the `-o` option. Therefore you must either set the operation field to "copy" or "symlink", or leave it empty.
+Each valid MANIFEST entry must include the three fields: `source_suffix`, `operation` and `target_suffix`. Because the operation field sits between these two, the script will still parse that field even if you specify a default operation with the `-o` option. Therefore you must either set the operation field to "copy", "symlink" or "exclude", or leave it empty.
 
 ```txt
 # For example
