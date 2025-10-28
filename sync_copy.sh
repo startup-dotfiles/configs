@@ -193,8 +193,8 @@ syncRepoAndHome() {
         TARGET_PREFIX+="/$target_suffix"
 
         # $HOME -> $REPO
-        source="$SOURCE_PREFIX/$file_or_dir"
-        target="$TARGET_PREFIX/$file_or_dir"
+        source="$(norm_nosym "$SOURCE_PREFIX/$file_or_dir")"
+        target="$(norm_nosym "$TARGET_PREFIX/$file_or_dir")"
 
         BACKUP_HOME_SUFFIX="$source_suffix/$(dirname "$file_or_dir")"
         BACKUP_REPO_SUFFIX="$target_suffix/$(dirname "$file_or_dir")"
@@ -216,8 +216,8 @@ syncRepoAndHome() {
             if [[ "$IS_EXCLUDED" -eq 1 ]]; then
                 filterPaths "$source"
                 for path in "${SOURCES[@]}"; do
-                    source="$path"
-                    target="$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}"
+                    source="$(norm_nosym "$path")"
+                    target="$(norm_nosym "$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}")"
 
                     BACKUP_HOME_SUFFIX="$(dirname "${source#"$HOME/"}")"
                     BACKUP_REPO_SUFFIX="$(dirname "${target#"$SCRIPT_DIR/"}")"

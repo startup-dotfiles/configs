@@ -4,105 +4,107 @@
 #
 # NOTE: Use '|' as the delimiter.
 #
-# - file_or_dir   : relative path, relative to the repository root.
-# - operation     : symlink or symlink
-# - destination   : relative path, relative to your $HOME directory.
-# - newname       : optionall, use the newname instead of the file or directory.
+# - appname         : required, the name of application.
+# - source_suffix   : required, relative path, relative to the repository root ($SCRIPT_DIR)
+# - file/directory  : required, objects to operate on, a file or directory or relative path
+# - operation       : required, copy/symlink/exclude
+# - target_suffix   : optional, relative path, relative to your $HOME directory
 
-# Apps ----------------------------------------------------------------------->
+# NOTE: You must ensure that the three fields can be concatenated into two real, existing paths.
+##
+## Use `clang-format` as an example
+## sourcepath: $SCRIPT_DIR/apps/coding/.clang-format
+## targetpath: $HOME/.clang-format
+##
+## The execution flow of these scripts is as follows:
+##
+##    deploy.sh: $REPO -> $HOME
+## - sourcePath: $SCRIPT_DIR/$source_suffix/$file_or_dir
+## - targetPath: $HOME/$target_suffix/$file_or_dir
+#
+## sync_copy.sh: $HOME -> $REPO
+## - sourcePath: $HOME/$target_suffix/$file_or_dir
+## - targetPath: $SCRIPT_DIR/$source_suffix/$file_or_dir
 
-## [Coding]
-### clang-format
-apps/coding/.clang-format|symlink
-### clangd
-apps/coding/.clangd|symlink|.config/clangd|config.yaml
-### gdb
-apps/coding/gdbinit|symlink|.config/gdb
-### shellcheck
-apps/coding/.shellcheckrc|symlink|.config
-### gf2
-apps/coding/gf2_config.ini|symlink|.config
-### marksman
-apps/coding/marksman/config.toml|symlink|.config/marksman
-
-## [Terminal]
-### aria2
-apps/terminal/cli/aria2/aria2.conf|symlink|.config/aria2
-### github-cli
-apps/terminal/cli/gh/config.yml|symlink|.config/gh
-apps/terminal/cli/gh/hosts.yml|symlink|.config/gh
-
-### htop
-apps/terminal/tui/htop/htoprc|symlink|.config/htop
-### btop
-apps/terminal/tui/btop/btop.conf|symlink|.config/btop
-### lazygit
-apps/terminal/tui/lazygit/config.yml|symlink|.config/lazygit
-### lazydocker
-apps/terminal/tui/lazydocker/config.yml|symlink|.config/lazydocker
-### glow
-apps/terminal/tui/glow/glow.yml|symlink|.config/glow
-### procs
-apps/terminal/tui/procs/config.toml|symlink|.config/procs
-### ncmpcpp
-apps/terminal/tui/ncmpcpp/config|symlink|.config/ncmpcpp
-### rmpc
-apps/terminal/tui/rmpc/config.ron|symlink|.config/rmpc
-apps/terminal/tui/rmpc/themes|symlink|.config/rmpc
-apps/terminal/tui/rmpc/bin|symlink|.config/rmpc
-apps/terminal/tui/rmpc/assets|copy|.config/rmpc
-### go-musicfox (!!!hardcode)
-apps/terminal/tui/go-musicfox/config.toml|symlink|.config/go-musicfox
-### atuin (!!!hardcode)
-apps/terminal/tui/atuin/config.toml|symlink|.config/atuin
-apps/terminal/tui/atuin/atuin-receipt.jsonc|symlink|.config/atuin
-### satty
-apps/terminal/satty/config.toml|symlink|.config/satty
-
-## [Flags]
-apps/flags/chromium-flags.conf|symlink|.config
-apps/flags/vivaldi-stable.conf|symlink|.config
-apps/flags/electron-flags.conf|symlink|.config
-apps/flags/code-flags.conf|symlink|.config
-apps/flags/codium-flags.conf|symlink|.config
-apps/flags/bilibili-flags.conf|symlink|.config
-apps/flags/qq-flags.conf|symlink|.config
-apps/flags/spotify-launcher.conf|symlink|.config
-
-# <------------------------------------------------------------------- ends Apps
+## WARNING: If you use exclude to skip specific paths,
+## it must be placed above the copy/symlink entry with the same name (appname);
+## otherwise it will not be excluded.
+##
+## Corrent:
+## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
+## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
+## btop         | apps/terminal/tui | btop/         | symlink | .config
+##
+## Incorrent:
+## btop         | apps/terminal/tui | btop/         | symlink | .config
+## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
+## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
+##
+## Incorrent:
+## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
+## btop         | apps/terminal/tui | btop/         | symlink | .config
+## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
 
 
-# Environment ----------------------------------------------------------------->
-
-## user-dirs
-etc/user-dirs.dirs|symlink|.config
-etc/user-dirs.locale|symlink|.config
-
-## fontconfig
-etc/fontconfig/fonts.conf|symlink|.config/fontconfig
-etc/fontconfig/conf.d/64-language-selector-prefer.conf|symlink|.config/fontconfig/conf.d
-
-## [KDE Plasma]
-### plasma-workspace
-etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
-etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
-
-## [Arch Linux]
-### pacman
-etc/pacman/makepkg.conf|symlink|.config/pacman
-etc/pacman/makepkg-clang.conf|symlink|.config/pacman
-### yay
-etc/yay/config.json|symlink|.config/yay
-
-# <------------------------------------------------------------ ends Environment
+# [Apps - Coding]
+clang-format | apps/coding | .clang-format      | symlink
+clangd       | apps/coding | clangd/config.yaml | symlink | .config
+shellcheck   | apps/coding | .shellcheckrc      | symlink | .config
+gdb          | apps/coding | gdb/gdbinit        | symlink | .config
+gf2          | apps/coding | gf2_config.ini     | symlink | .config
+marksman     | apps/coding | marksman/          | symlink | .config
 
 
-# Services -------------------------------------------------------------------->
+# [Apps - Terminal]
+aria2        | apps/terminal/cli | aria2/        | symlink | .config
+github-cli   | apps/terminal/cli | gh/           | symlink | .config
+htop         | apps/terminal/tui | htop/         | symlink | .config
 
-## mpd                                 (system --user enable --now mpd.service)
-services/mpd/mpd.conf|symlink|.config/mpd
-## pipewire
-services/pipewire/pipewire.conf.d/10-sound.conf|symlink|.config/pipewire/pipewire.conf.d
-services/pipewire/pipewire.conf.d/20-no-resampling.conf|symlink|.config/pipewire/pipewire.conf.d
+btop         | apps/terminal/tui | btop/btop.log | exclude | .config
+btop         | apps/terminal/tui | btop/themes/  | exclude | .config
+btop         | apps/terminal/tui | btop/         | symlink | .config
 
-# <---------------------------------------------------------------- ends Services
+lazygit      | apps/terminal/tui | lazygit/      | symlink | .config
+lazydocker   | apps/terminal/tui | lazydocker/   | symlink | .config
+glow         | apps/terminal/tui | glow/         | symlink | .config
+procs        | apps/terminal/tui | procs/        | symlink | .config
+
+ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
+ncmpcpp      | apps/terminal/tui | ncmpcpp/          | symlink | .config
+
+rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
+rmpc         | apps/terminal/tui | rmpc              | symlink | .config
+
+go-musicfox  | apps/terminal/tui | go-musicfox/  | symlink | .config
+atuin        | apps/terminal/tui | atuin/        | symlink | .config
+satty        | apps/terminal     | satty/        | symlink | .config
+
+
+# [Flags]
+electron         | apps/flags | electron-flags.conf   | symlink | .config
+chromium         | apps/flags | chromium-flags.conf   | symlink | .config
+vivaldi-stable   | apps/flags | vivaldi-stable.conf   | symlink | .config
+code             | apps/flags | code-flags.conf       | symlink | .config
+codium           | apps/flags | codium-flags.conf     | symlink | .config
+bilibili         | apps/flags | bilibili-flags.conf   | symlink | .config
+qq               | apps/flags | qq-flags.conf         | symlink | .config
+spotify-launcher | apps/flags | spotify-launcher.conf | symlink | .config
+
+
+# [Env]
+xdg-user-dirs    | etc | user-dirs.dirs    | symlink | .config
+xdg-user-dirs    | etc | user-dirs.locale  | symlink | .config
+fontconfig       | etc | fontconfig/       | symlink | .config
+
+plasma-workspace | etc | plasma-workspace/shutdown | exclude | .config
+plasma-workspace | etc | plasma-workspace/         | symlink | .config
+
+pacman           | etc | pacman/           | symlink | .config
+yay              | etc | yay/              | symlink | .config
+
+
+# [Services]
+mpd      | services | mpd/playlists | exclude | .config
+mpd      | services | mpd/          | symlink | .config
+
+pipewire | services | pipewire/ | symlink | .config

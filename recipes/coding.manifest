@@ -1,33 +1,31 @@
 ## Programming
 
-
 ## [GIT]
 ##
 ## github-cli
-apps/terminal/cli/gh/config.yml|symlink|.config/gh
-apps/terminal/cli/gh/hosts.yml|symlink|.config/gh
+github-cli | apps/terminal/cli | gh/ | symlink | .config
 
 ## [Markdown]
 ##
 ## marksman (LSP)
-apps/coding/marksman/config.toml|symlink|.config/marksman
+marksman | apps/coding | marksman/ | symlink | .config
 
 ## [Bash]
 ##
 ## shellcheck (Linter)
-apps/coding/.shellcheckrc|symlink|.config
+shellcheck | apps/coding | .shellcheckrc | symlink | .config
 
 ## [C/C++]
 ##
 ## gdb (Debugger)
-apps/coding/gdbinit|symlink|.config/gdb
+gdb | apps/coding | gdb/gdbinit | symlink | .config
 ##
 ## gf2 (a GDB frontend)
-apps/coding/gf2_config.ini|symlink|.config
+gf2 | apps/coding | gf2_config.ini | symlink | .config
 ##
 ## clang-format (Fromatter)
-apps/coding/.clang-format|symlink
+clang-format | apps/coding | .clang-format | symlink
 ##
 ## clangd (LSP)
-apps/coding/.clangd|symlink|.config/clangd|config.yaml
+clangd | apps/coding | clangd/config.yaml | symlink | .config
 

@@ -2,4 +2,4 @@
 
 
 ## aria2
-apps/terminal/cli/aria2/aria2.conf|symlink|.config/aria2
+aria2 | apps/terminal/cli | aria2/ | symlink | .config

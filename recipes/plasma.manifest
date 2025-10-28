@@ -2,5 +2,5 @@
 
 
 ## plasma-workspace
-#etc/plasma-workspace/env/nvidia.sh|symlink|.config/plasma-workspace/env
-#etc/plasma-workspace/env/qt-media-backend.sh|symlink|.config/plasma-workspace/env
+plasma-workspace | etc | plasma-workspace/shutdown | exclude | .config
+plasma-workspace | etc | plasma-workspace/         | symlink | .config

@@ -2,4 +2,3 @@ set debuginfod enabled on
 set auto-load safe-path $HOME
 set breakpoint pending on
 set disassembly-flavor intel
-#
