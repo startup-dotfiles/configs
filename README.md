@@ -2,6 +2,13 @@
 
 Configuration files scattered across various locations.
 
+## Advantages
+
+- No third-party dependencies.
+- Check modification timestamps during sync to back up files.
+- Support deploying and syncing using copy, symlink, and exclude methods.
+- ...
+
 ## Usage
 
 Use `./deploy.sh` to install files from this repository into the specified locations under `$HOME` according to the rules in `MANIFEST.linux`.
