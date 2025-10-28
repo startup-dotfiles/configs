@@ -79,7 +79,7 @@ clangd | apps/coding | clangd/config.yaml |         | .config  # Use -o option
 > If you use exclude to skip specific paths, it must be placed above the copy/symlink entry with the same name (appname)
 > otherwise it will not be excluded.
 
-```
+```txt
 ## Corrent:
 btop         | apps/terminal/tui | btop/btop.log | exclude | .config # OK
 btop         | apps/terminal/tui | btop/themes/  | exclude | .config # OK
