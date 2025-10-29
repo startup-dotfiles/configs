@@ -102,7 +102,7 @@ copyFile() {
 
     # If the source file already exists in your home directory,
     # and it is a regular file or directory.
-    if [ -d "$source" ]; then
+    if [ -f "$source" ]; then
         # If the target file or directory does not exist, or has not been modified,
         # it does not need to be backed up.
         if is_diff_mtime "$source" "$target"; then
@@ -115,7 +115,7 @@ copyFile() {
     # If the target directory does not exists, create the target directory.
     mkdir -p "$target_dir"
 
-    # If the target file or directory does not exist, or has been modified,
+    # If the target file does not exist, or has been modified,
     # then the local source and the target repository need to be synchronized.
     if [[ ! -e "$target" ]]; then
         cp -p -r "$source" "$target_dir"
