@@ -96,9 +96,9 @@ firstEmptyChar = "·"
 # 若设置了 MUSICFOX_ROOT 变量，则默认为 ${MUSICFOX_ROOT}/download
 # 若未设置 MUSICFOX_ROOT 变量，则为相应系统的默认下载目录的 go-musicfox 子目录
 # 请使用绝对路径
-downloadDir = "/home/stmt/Music/musicfox"     # WARNING: hardcode
+downloadDir = "/home/stmt/User/Music/musicfox" # WARNING: hardcode
 # 歌词文件的默认下载目录。如果为空，则与downloadDir保持一致。
-lyricDir = "/home/stmt/Music/musicfox" # WARNING: hardcode
+lyricDir = "/home/stmt/User/Music/musicfox" # WARNING: hardcode
 # 下载歌曲时是否同时下载歌词文件（仅当下载歌曲成功时）
 downloadSongWithLyric = true
 # 下载文件的命名模板

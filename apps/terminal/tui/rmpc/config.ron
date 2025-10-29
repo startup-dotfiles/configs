@@ -11,8 +11,8 @@
     password: None,                // see `password`
 
     // Paths
-    cache_dir: None,             // WARNING: Currently used only to store files downloaded from YouTube.
-    lyrics_dir: Some("~/Music"), // WARNING: hardcode
+    cache_dir: None,                  // WARNING: Currently used only to store files downloaded from YouTube.
+    lyrics_dir: Some("~/User/Music"), // WARNING: hardcode
 
     // Theme
     theme: Some("default"), // -> themes/xxx.ron
