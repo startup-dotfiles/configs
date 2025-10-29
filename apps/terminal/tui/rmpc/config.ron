@@ -28,6 +28,7 @@
     keep_state_on_song_change: true,
 
     // TODO: Themes must be designed for different sizes.
+    // See https://mierak.github.io/rmpc/next/guides/on_resize/
     //
     // on_resize: ["~/.config/rmpc/bin/onresize"], // auto change theme for different size.
 
