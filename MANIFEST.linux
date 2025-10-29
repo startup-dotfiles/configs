@@ -73,7 +73,7 @@ ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
 ncmpcpp      | apps/terminal/tui | ncmpcpp/          | symlink | .config
 
 rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
-rmpc         | apps/terminal/tui | rmpc              | symlink | .config
+rmpc         | apps/terminal/tui | rmpc/             | symlink | .config
 
 go-musicfox  | apps/terminal/tui | go-musicfox/  | symlink | .config
 atuin        | apps/terminal/tui | atuin/        | symlink | .config
