@@ -188,7 +188,14 @@
                         paused_label: " Paused", paused_style: (fg: "#FABD2F"),
                         stopped_label: " Stopped", stopped_style: (fg: "#FABD2F"),
                     )))),
-                    (kind: Text(" ]"), style: (fg: "#FABD2F", modifiers: "Bold"))
+                    (kind: Text(" ]"), style: (fg: "#FABD2F", modifiers: "Bold")),
+
+                    (kind: Text(" ("), style: (fg: "#af87d7")),
+                    (kind: Property(Status(QueueTimeTotal(separator: "/"))), style: (fg: "#af87d7")),
+                    (kind: Text("<"), style: (fg: "#af87d7")),
+                    (kind: Property(Status(QueueLength(thousands_separator: ","))), style: (fg: "#af87d7")),
+                    (kind: Text(">"), style: (fg: "#af87d7")),
+                    (kind: Text(")"), style: (fg: "#af87d7")),
                 ],
                 // Song Title
                 center: [
@@ -203,26 +210,16 @@
                 ]
             ),
             (
-                // 0:38/3:09 (192 kbps)
+                // [ 0:38/3:09 ] (192 kbps)
                 left: [
-                    (kind: Property(Status(Elapsed)),
-                        style: (fg: "#af87d7"),
-                    ),
-                    (kind: Text(" / "),
-                        style: (fg: "#af87d7"),
-                    ),
-                    (kind: Property(Status(Duration)),
-                        style: (fg: "#af87d7"),
-                    ),
-                    (kind: Text(" ("),
-                        style: (fg: "#af87d7"),
-                    ),
-                    (kind: Property(Status(Bitrate)),
-                        style: (fg: "#af87d7"),
-                    ),
-                    (kind: Text(" kbps)"),
-                        style: (fg: "#af87d7"),
-                    )
+                    (kind: Text("[ "), style: (fg: "#FABD2F", modifiers: "Bold")),
+                    (kind: Property(Status(Elapsed)), style: (fg: "#FABD2F")),
+                    (kind: Text("/"),style: (fg: "#FABD2F")),
+                    (kind: Property(Status(Duration)),style: (fg: "#FABD2F")),
+                    (kind: Text(" ]"), style: (fg: "#FABD2F", modifiers: "Bold")),
+                    (kind: Text(" ("), style: (fg: "#af87d7")),
+                    (kind: Property(Status(Bitrate)), style: (fg: "#af87d7")),
+                    (kind: Text(" kbps)"), style: (fg: "#af87d7")),
                 ],
                 // Artist - Album
                 center: [
