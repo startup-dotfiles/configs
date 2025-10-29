@@ -8,8 +8,11 @@ set -e
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 MANIFEST="${SCRIPT_DIR}/MANIFEST.linux"
-HOME_BACKUP_DIR="${SCRIPT_DIR}/__backup__/home_backup/$(date +%y-%m-%d-%H%M%S)"
-REPO_BACKUP_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
+
+SOURCE_ROOT="$HOME"
+TARGET_ROOT="$SCRIPT_DIR"
+BACKUP_HOME_DIR="${SCRIPT_DIR}/__backup__/home_backup/$(date +%y-%m-%d-%H%M%S)"
+BACKUP_REPO_DIR="${SCRIPT_DIR}/__backup__/repo_backup/$(date +%y-%m-%d-%H%M%S)"
 
 if ! source "${SCRIPT_DIR}/scripts/global_fn.sh"; then
     echo "Error: unable to source scripts/global_fn.sh..."
@@ -17,16 +20,14 @@ if ! source "${SCRIPT_DIR}/scripts/global_fn.sh"; then
 fi
 
 ALL=()
-SOURCES=()
+INCLUDES=()
 EXCLUDES=()
-IS_EXCLUDED=0
 
 APP_NAME=""
-SOURCE_PREFIX="$HOME"
-TARGET_PREFIX="$SCRIPT_DIR"
+SOURCE_PREFIX="$SOURCE_ROOT"
+TARGET_PREFIX="$TARGET_ROOT"
 OPERATION=""
-BACKUP_HOME_SUFFIX=""
-BACKUP_REPO_SUFFIX=""
+
 LAST_APP_NAME=""
 
 is_help_mode=0
@@ -34,30 +35,29 @@ is_debug_mode=0
 
 reset_status() {
     APP_NAME=""
-    SOURCE_PREFIX="$HOME"
-    TARGET_PREFIX="$SCRIPT_DIR"
+    SOURCE_PREFIX="$SOURCE_ROOT"
+    TARGET_PREFIX="$TARGET_ROOT"
     OPERATION=""
-    BACKUP_HOME_SUFFIX=""
-    BACKUP_REPO_SUFFIX=""
 }
 
-splitDir() {
-    for i in "${!EXCLUDES[@]}"; do
-        EXCLUDES[i]="$(norm "${EXCLUDES[$i]}")"
-    done
-
+getAllPaths() {
     local root_dir
-    root_dir="$(norm "$1")"
+    root_dir="$(norm_nosym "$1")"
     while IFS= read -r -d '' path; do
         if [ ! -d "$path" ]; then
-            ALL+=("$(norm "$path")")
+            ALL+=("$(norm_nosym "$path")")
         fi
     done < <(find "$root_dir" -mindepth 1 -print0)
 }
 
 is_excluded() {
     local target
-    target="$(norm "$1")"
+    target="$(norm_nosym "$1")"
+
+    for i in "${!EXCLUDES[@]}"; do
+        EXCLUDES[i]="$(norm_nosym "${EXCLUDES[$i]}")"
+    done
+
     for ex in "${EXCLUDES[@]}"; do
         # Match the excluded directory itself or any of its subitems.
         if [[ "$target" == "$ex" || "$target" == "$ex/"* ]]; then
@@ -67,11 +67,11 @@ is_excluded() {
     return 1
 }
 
-filterPaths() {
-    splitDir "$1"
+getIncludePaths() {
+    getAllPaths "$1"
     for path in "${ALL[@]}"; do
         if ! is_excluded "$path"; then
-            SOURCES+=("$path")
+            INCLUDES+=("$path")
         fi
     done
 
@@ -83,15 +83,15 @@ copyFile() {
     local source="$1"
     local target="$2"
     local target_dir="$(dirname "$target")"
-    local backup_dir="$REPO_BACKUP_DIR/$BACKUP_REPO_SUFFIX"
+    local backup_dir="$BACKUP_REPO_DIR/$3"
 
-    # Ensure the source files/directories exists
+    # Ensure the source file exists
     if [ ! -e "$source" ]; then
         printf "${ERROR} ${YELLOW}%s${RESET} does not exist - please check your MANIFEST file.\n" "$source"
         exit 1
     fi
 
-    # If the source file or directory already exists in your home directory,
+    # If the source file already exists in your home directory,
     # but it is a symbolic link, just skiping it.
     if [ -L "$source" ]; then
         printf "${WARN} ${YELLOW}%s${RESET} already symlinked and doesn't need to sync it. skiping...\n" "$source"
@@ -100,9 +100,9 @@ copyFile() {
         return
     fi
 
-    # If the source file or directory already exists in your home directory,
+    # If the source file already exists in your home directory,
     # and it is a regular file or directory.
-    if [ -d "$source" ] || [ -f "$source" ]; then
+    if [ -d "$source" ]; then
         # If the target file or directory does not exist, or has not been modified,
         # it does not need to be backed up.
         if is_diff_mtime "$source" "$target"; then
@@ -112,7 +112,7 @@ copyFile() {
         fi
     fi
 
-    # If the target file or directory does not exists, create the target directory.
+    # If the target directory does not exists, create the target directory.
     mkdir -p "$target_dir"
 
     # If the target file or directory does not exist, or has been modified,
@@ -129,9 +129,9 @@ excludeFile() {
     local source="$1"
     local target="$2"
     local source_dir="$(dirname "$source")"
-    local backup_dir="$REPO_BACKUP_DIR/$BACKUP_REPO_SUFFIX"
+    local backup_dir="$BACKUP_REPO_DIR/$3"
 
-    # If the source file or directory does not exist, return immediately.
+    # If the source file does not exist, return immediately.
     if [ ! -e "$source" ]; then
         printf "${WARN} ${YELLOW}%s${RESET} does not exist but excluded - skipping.\n" "$source"
 
@@ -139,8 +139,8 @@ excludeFile() {
         return
     fi
 
-    # If the files or directories to be excluded already exist in your $HOME directory and is a symbolic link,
-    # remove this symlink directly and move the excluded files and directories back to your $HOME directory.
+    # If the file to be excluded already exist in your $HOME directory and is a symbolic link,
+    # remove this symlink directly and move the excluded file back to your $HOME directory.
     if [ -L "$source" ]; then
         unlink "$source"
         mv "$target" -t "$source_dir"
@@ -149,10 +149,10 @@ excludeFile() {
         return
     fi
 
-    # If the files or directories to be excluded already exist in the repository,
+    # If the file to be excluded already exist in the repository,
     # move them to the backup directory and prompt the user to update the corresponding MANIFEST file
     # by moving the exclude entries before the related entries so this does not happen on the next sync.
-    if [ -f "$target" ] || [ -d "$target" ]; then
+    if [ -f "$target" ]; then
         # Backup target files
         mkdir -p "$backup_dir"
         mv "$target" -t "$backup_dir"
@@ -162,7 +162,6 @@ excludeFile() {
     fi
 
     EXCLUDES+=("${source}")
-    IS_EXCLUDED=1
     printf "${WARN} ${YELLOW}%s${RESET} has been excluded.\n" "$source"
 }
 
@@ -186,18 +185,23 @@ syncRepoAndHome() {
         IFS='|' read -r appname target_suffix file_or_dir \
             operation source_suffix <<<"$(sed 's/ *| */|/g' <<<"$row")"
 
+        # Global infos
         APP_NAME="$appname"
-        if [[ ! -z "$source_suffix" ]]; then
-            SOURCE_PREFIX+="/$source_suffix"
-        fi
-        TARGET_PREFIX+="/$target_suffix"
+        [[ ! -z "$source_suffix" ]] && SOURCE_PREFIX+="/$source_suffix"
+        [[ ! -z "$target_suffix" ]] && TARGET_PREFIX+="/$target_suffix"
 
         # $HOME -> $REPO
         source="$(norm_nosym "$SOURCE_PREFIX/$file_or_dir")"
         target="$(norm_nosym "$TARGET_PREFIX/$file_or_dir")"
+        #backup_home_suffix="$(dirname "${source#"$SOURCE_ROOT/"}")"
+        backup_repo_suffix="$(dirname "${target#"$TARGET_ROOT/"}")"
 
-        BACKUP_HOME_SUFFIX="$source_suffix/$(dirname "$file_or_dir")"
-        BACKUP_REPO_SUFFIX="$target_suffix/$(dirname "$file_or_dir")"
+        # This condition is generally always true, except if an exclude operation has been performed
+        # and the entries with the same APP_NAME have not all completed; in that case the EXCLUDES array state
+        # will be preserved.
+        if [[ "$APP_NAME" -ne "$LAST_APP_NAME" ]]; then
+            EXCLUDES=()
+        fi
 
         # DEBUG: INFO
         if [[ $is_debug_mode -ne 0 ]]; then
@@ -209,31 +213,47 @@ syncRepoAndHome() {
             continue
         fi
 
+        # Begin performing the concrete operations.
+        # If the target is a directory, it will be split into multiple individual files.
         if [[ $operation == "exclude" ]]; then
-            excludeFile "$source" "$target"
-            reset_status
-        else
-            if [[ "$IS_EXCLUDED" -eq 1 ]] || [[ "$APP_NAME" -eq "$LAST_APP_NAME" ]]; then
-                filterPaths "$source"
-                for path in "${SOURCES[@]}"; do
+            if [[ -d "$source" ]]; then
+                # This will deduplicate the EXCLUDES array.
+                getIncludePaths "$source"
+                for path in "${INCLUDES[@]}"; do
                     source="$(norm_nosym "$path")"
                     target="$(norm_nosym "$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}")"
+                    #backup_home_suffix="$(dirname "${source#"$SOURCE_ROOT/"}")"
+                    backup_repo_suffix="$(dirname "${target#"$TARGET_ROOT/"}")"
 
-                    BACKUP_HOME_SUFFIX="$(dirname "${source#"$HOME/"}")"
-                    BACKUP_REPO_SUFFIX="$(dirname "${target#"$SCRIPT_DIR/"}")"
-
-                    copyFile "$source" "$target"
+                    excludeFile "$source" "$target" "$backup_repo_suffix"
                 done
-                LAST_APP_NAME="$APP_NAME"
-                IS_EXCLUDED=0
-                SOURCES=()
-                reset_status
-            else
-                copyFile "$source" "$target"
-                EXCLUDES=()
-                reset_status
+            else # [[ -f "$source" ]]
+                excludeFile "$source" "$target" "$backup_repo_suffix"
             fi
+            # If there are subsequent entries with the same APP_NAME,
+            # this will be used to preserve the EXCLUDES array state.
+            LAST_APP_NAME="$APP_NAME"
+        elif [[ $operation == "copy" || $operation == "symlink" ]]; then
+            if [[ -d "$source" ]]; then
+                getIncludePaths "$source"
+                for path in "${INCLUDES[@]}"; do
+                    source="$(norm_nosym "$path")"
+                    target="$(norm_nosym "$TARGET_PREFIX/${path#"$SOURCE_PREFIX/"}")"
+                    #backup_home_suffix="$(dirname "${source#"$SOURCE_ROOT/"}")"
+                    backup_repo_suffix="$(dirname "${target#"$TARGET_ROOT/"}")"
+
+                    copyFile "$source" "$target" "$backup_repo_suffix"
+                done
+            else # [[ -f "$source" ]]
+                copyFile "$source" "$target" "$backup_repo_suffix"
+            fi
+        else
+            printf "${ERROR} Unknown operation %s. Skipping..." "$operation"
+            exit 1
         fi
+        # Reset status
+        INCLUDES=()
+        reset_status
     done <"$MANIFEST"
 }
 
