@@ -27,6 +27,7 @@ TARGET_PREFIX="$SCRIPT_DIR"
 OPERATION=""
 BACKUP_HOME_SUFFIX=""
 BACKUP_REPO_SUFFIX=""
+LAST_APP_NAME=""
 
 is_help_mode=0
 is_debug_mode=0
@@ -76,7 +77,6 @@ filterPaths() {
 
     # reset
     ALL=()
-    EXCLUDES=()
 }
 
 copyFile() {
@@ -213,7 +213,7 @@ syncRepoAndHome() {
             excludeFile "$source" "$target"
             reset_status
         else
-            if [[ "$IS_EXCLUDED" -eq 1 ]]; then
+            if [[ "$IS_EXCLUDED" -eq 1 ]] || [[ "$APP_NAME" -eq "$LAST_APP_NAME" ]]; then
                 filterPaths "$source"
                 for path in "${SOURCES[@]}"; do
                     source="$(norm_nosym "$path")"
@@ -224,11 +224,13 @@ syncRepoAndHome() {
 
                     copyFile "$source" "$target"
                 done
+                LAST_APP_NAME="$APP_NAME"
                 IS_EXCLUDED=0
                 SOURCES=()
                 reset_status
             else
                 copyFile "$source" "$target"
+                EXCLUDES=()
                 reset_status
             fi
         fi
