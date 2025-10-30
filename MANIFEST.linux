@@ -69,11 +69,6 @@ lazydocker   | apps/terminal/tui | lazydocker/   | symlink | .config
 glow         | apps/terminal/tui | glow/         | symlink | .config
 procs        | apps/terminal/tui | procs/        | symlink | .config
 
-ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
-ncmpcpp      | apps/terminal/tui | ncmpcpp/          | symlink | .config
-
-rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
-rmpc         | apps/terminal/tui | rmpc/             | symlink | .config
 
 go-musicfox  | apps/terminal/tui | go-musicfox/  | symlink | .config
 atuin        | apps/terminal/tui | atuin/        | symlink | .config
@@ -104,7 +99,22 @@ yay              | etc | yay/              | symlink | .config
 
 
 # [Services]
-mpd      | services | mpd/playlists | exclude | .config
-mpd      | services | mpd/          | symlink | .config
-
 pipewire | services | pipewire/ | symlink | .config
+
+
+
+
+
+
+
+## WARNING: These configurations may be outdated or moved elsewhere;
+##          please do not enable them. They are kept here for record-keeping only.
+
+#ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
+#ncmpcpp      | apps/terminal/tui | ncmpcpp/          | symlink | .config
+
+#rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
+#rmpc         | apps/terminal/tui | rmpc/             | symlink | .config
+
+#mpd      | services | mpd/playlists | exclude | .config
+#mpd      | services | mpd/          | symlink | .config
