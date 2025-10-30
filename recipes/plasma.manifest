@@ -3,4 +3,4 @@
 
 ## plasma-workspace
 plasma-workspace | etc | plasma-workspace/shutdown | exclude | .config
-plasma-workspace | etc | plasma-workspace/         | symlink | .config
+plasma-workspace | etc | plasma-workspace/         | copy    | .config

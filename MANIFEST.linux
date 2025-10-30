@@ -33,73 +33,73 @@
 ## Corrent:
 ## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
 ## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
-## btop         | apps/terminal/tui | btop/         | symlink | .config
+## btop         | apps/terminal/tui | btop/         | copy | .config
 ##
 ## Incorrent:
-## btop         | apps/terminal/tui | btop/         | symlink | .config
+## btop         | apps/terminal/tui | btop/         | copy | .config
 ## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
 ## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
 ##
 ## Incorrent:
 ## btop         | apps/terminal/tui | btop/btop.log | exclude | .config
-## btop         | apps/terminal/tui | btop/         | symlink | .config
+## btop         | apps/terminal/tui | btop/         | copy | .config
 ## btop         | apps/terminal/tui | btop/themes/  | exclude | .config
 
 
 # [Apps - Coding]
-clang-format | apps/coding | .clang-format      | symlink
-clangd       | apps/coding | clangd/config.yaml | symlink | .config
-shellcheck   | apps/coding | .shellcheckrc      | symlink | .config
-gdb          | apps/coding | gdb/gdbinit        | symlink | .config
-gf2          | apps/coding | gf2_config.ini     | symlink | .config
-marksman     | apps/coding | marksman/          | symlink | .config
+clang-format | apps/coding | .clang-format      | copy
+clangd       | apps/coding | clangd/config.yaml | copy | .config
+shellcheck   | apps/coding | .shellcheckrc      | copy | .config
+gdb          | apps/coding | gdb/gdbinit        | copy | .config
+gf2          | apps/coding | gf2_config.ini     | copy | .config
+marksman     | apps/coding | marksman/          | copy | .config
 
 
 # [Apps - Terminal]
-aria2        | apps/terminal/cli | aria2/        | symlink | .config
-github-cli   | apps/terminal/cli | gh/           | symlink | .config
-htop         | apps/terminal/tui | htop/         | symlink | .config
+aria2        | apps/terminal/cli | aria2/        | copy | .config
+github-cli   | apps/terminal/cli | gh/           | copy | .config
+htop         | apps/terminal/tui | htop/         | copy | .config
 
 btop         | apps/terminal/tui | btop/btop.log | exclude | .config
 btop         | apps/terminal/tui | btop/themes/  | exclude | .config
-btop         | apps/terminal/tui | btop/         | symlink | .config
+btop         | apps/terminal/tui | btop/         | copy | .config
 
-lazygit      | apps/terminal/tui | lazygit/      | symlink | .config
-lazydocker   | apps/terminal/tui | lazydocker/   | symlink | .config
-glow         | apps/terminal/tui | glow/         | symlink | .config
-procs        | apps/terminal/tui | procs/        | symlink | .config
+lazygit      | apps/terminal/tui | lazygit/      | copy | .config
+lazydocker   | apps/terminal/tui | lazydocker/   | copy | .config
+glow         | apps/terminal/tui | glow/         | copy | .config
+procs        | apps/terminal/tui | procs/        | copy | .config
 
 
-go-musicfox  | apps/terminal/tui | go-musicfox/  | symlink | .config
-atuin        | apps/terminal/tui | atuin/        | symlink | .config
-satty        | apps/terminal     | satty/        | symlink | .config
+go-musicfox  | apps/terminal/tui | go-musicfox/  | copy | .config
+atuin        | apps/terminal/tui | atuin/        | copy | .config
+satty        | apps/terminal     | satty/        | copy | .config
 
 
 # [Flags]
-electron         | apps/flags | electron-flags.conf   | symlink | .config
-chromium         | apps/flags | chromium-flags.conf   | symlink | .config
-vivaldi-stable   | apps/flags | vivaldi-stable.conf   | symlink | .config
-code             | apps/flags | code-flags.conf       | symlink | .config
-codium           | apps/flags | codium-flags.conf     | symlink | .config
-bilibili         | apps/flags | bilibili-flags.conf   | symlink | .config
-qq               | apps/flags | qq-flags.conf         | symlink | .config
-spotify-launcher | apps/flags | spotify-launcher.conf | symlink | .config
+electron         | apps/flags | electron-flags.conf   | copy | .config
+chromium         | apps/flags | chromium-flags.conf   | copy | .config
+vivaldi-stable   | apps/flags | vivaldi-stable.conf   | copy | .config
+code             | apps/flags | code-flags.conf       | copy | .config
+codium           | apps/flags | codium-flags.conf     | copy | .config
+bilibili         | apps/flags | bilibili-flags.conf   | copy | .config
+qq               | apps/flags | qq-flags.conf         | copy | .config
+spotify-launcher | apps/flags | spotify-launcher.conf | copy | .config
 
 
 # [Env]
-xdg-user-dirs    | etc | user-dirs.dirs    | symlink | .config
-xdg-user-dirs    | etc | user-dirs.locale  | symlink | .config
-fontconfig       | etc | fontconfig/       | symlink | .config
+xdg-user-dirs    | etc | user-dirs.dirs    | copy | .config
+xdg-user-dirs    | etc | user-dirs.locale  | copy | .config
+fontconfig       | etc | fontconfig/       | copy | .config
 
 plasma-workspace | etc | plasma-workspace/shutdown/ | exclude | .config
-plasma-workspace | etc | plasma-workspace/          | symlink | .config
+plasma-workspace | etc | plasma-workspace/          | copy | .config
 
-pacman           | etc | pacman/           | symlink | .config
-yay              | etc | yay/              | symlink | .config
+pacman           | etc | pacman/           | copy | .config
+yay              | etc | yay/              | copy | .config
 
 
 # [Services]
-pipewire | services | pipewire/ | symlink | .config
+pipewire | services | pipewire/ | copy | .config
 
 
 
@@ -111,10 +111,10 @@ pipewire | services | pipewire/ | symlink | .config
 ##          please do not enable them. They are kept here for record-keeping only.
 
 #ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
-#ncmpcpp      | apps/terminal/tui | ncmpcpp/          | symlink | .config
+#ncmpcpp      | apps/terminal/tui | ncmpcpp/          | copy | .config
 
 #rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
-#rmpc         | apps/terminal/tui | rmpc/             | symlink | .config
+#rmpc         | apps/terminal/tui | rmpc/             | copy | .config
 
 #mpd      | services | mpd/playlists | exclude | .config
-#mpd      | services | mpd/          | symlink | .config
+#mpd      | services | mpd/          | copy | .config

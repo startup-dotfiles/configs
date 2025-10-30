@@ -4,7 +4,7 @@
 ## [Arch Linux]
 ##
 ## pacman
-pacman | etc | pacman/ | symlink | .config
+pacman | etc | pacman/ | copy | .config
 ##
 ## yay
-yay | etc | yay/ | symlink | .config
+yay | etc | yay/ | copy | .config

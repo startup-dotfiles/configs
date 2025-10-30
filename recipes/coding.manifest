@@ -3,29 +3,29 @@
 ## [GIT]
 ##
 ## github-cli
-github-cli | apps/terminal/cli | gh/ | symlink | .config
+github-cli | apps/terminal/cli | gh/ | copy | .config
 
 ## [Markdown]
 ##
 ## marksman (LSP)
-marksman | apps/coding | marksman/ | symlink | .config
+marksman | apps/coding | marksman/ | copy | .config
 
 ## [Bash]
 ##
 ## shellcheck (Linter)
-shellcheck | apps/coding | .shellcheckrc | symlink | .config
+shellcheck | apps/coding | .shellcheckrc | copy | .config
 
 ## [C/C++]
 ##
 ## gdb (Debugger)
-gdb | apps/coding | gdb/gdbinit | symlink | .config
+gdb | apps/coding | gdb/gdbinit | copy | .config
 ##
 ## gf2 (a GDB frontend)
-gf2 | apps/coding | gf2_config.ini | symlink | .config
+gf2 | apps/coding | gf2_config.ini | copy | .config
 ##
 ## clang-format (Fromatter)
-clang-format | apps/coding | .clang-format | symlink
+clang-format | apps/coding | .clang-format | copy
 ##
 ## clangd (LSP)
-clangd | apps/coding | clangd/config.yaml | symlink | .config
+clangd | apps/coding | clangd/config.yaml | copy | .config
 

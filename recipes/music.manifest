@@ -1,51 +1,7 @@
-## Music Player
-
-## Requirements:
-## - Deamon: mpd
-## - CLI: mpc
-## - Clients:
-##     - ncmpcpp
-##     - rmpc
-
-
-## NOTE: My configuration is set up to run with user permissions by default,
-##  which means no permission changes are required to use it.
-##
-## Only enable the user service
-## system --user enable --now mpd.service
-##
-## mpd (Deamon)
-mpd | services | mpd/playlists | exclude | .config
-mpd | services | mpd/          | symlink | .config
-
-
-## NOTE: MPD also needs audio backends, such as PipeWire or ALSA. You need to install them.
-## These packages's default configuration works out of the box.
-## Here are some of my personal settings for reference.
-##
-## pipewire (Audio backend)
-pipewire | services | pipewire/ | symlink | .config
-
-
-## NOTE: MPD' clients
-## Although I minimized hardcoding so it works without changes, some settings had to be hardcoded.
-## Because they can't read environment variables or for other reasons — you should check them to ensure they work on your device.
-##
-## ncmpcpp (MPD TUI client)
-ncmpcpp | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
-ncmpcpp | apps/terminal/tui | ncmpcpp/          | symlink | .config
-
-## WARNING: hardcode
-##
-## rmpc (MPD TUI client)
-rmpc | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
-rmpc | apps/terminal/tui | rmpc              | symlink | .config
-
-
 ## NOTE: This is a third-party NetEase Cloud Music client intended for users in mainland China only.
 ## It's not directly related to MPD; you can ignore it.
 ##
 ## WARNING: hardcode
 ##
 ##go-musicfox (NetEase Music TUI client)
-#go-musicfox | apps/terminal/tui | go-musicfox/ | symlink | .config
+#go-musicfox | apps/terminal/tui | go-musicfox/ | copy | .config
