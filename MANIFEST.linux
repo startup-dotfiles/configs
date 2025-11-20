@@ -86,17 +86,6 @@ qq               | apps/flags | qq-flags.conf         | copy | .config
 spotify-launcher | apps/flags | spotify-launcher.conf | copy | .config
 
 
-# [Env]
-xdg-user-dirs    | etc | user-dirs.dirs    | copy | .config
-xdg-user-dirs    | etc | user-dirs.locale  | copy | .config
-fontconfig       | etc | fontconfig/       | copy | .config
-
-plasma-workspace | etc | plasma-workspace/shutdown/ | exclude | .config
-plasma-workspace | etc | plasma-workspace/          | copy | .config
-
-pacman           | etc | pacman/           | copy | .config
-
-
 # [Services]
 pipewire | services | pipewire/ | copy | .config
 

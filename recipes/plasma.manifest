@@ -1,6 +1,0 @@
-## KDE Plasma (DE)
-
-
-## plasma-workspace
-plasma-workspace | etc | plasma-workspace/shutdown | exclude | .config
-plasma-workspace | etc | plasma-workspace/         | copy    | .config
