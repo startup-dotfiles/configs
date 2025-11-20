@@ -95,7 +95,6 @@ plasma-workspace | etc | plasma-workspace/shutdown/ | exclude | .config
 plasma-workspace | etc | plasma-workspace/          | copy | .config
 
 pacman           | etc | pacman/           | copy | .config
-yay              | etc | yay/              | copy | .config
 
 
 # [Services]
@@ -110,11 +109,13 @@ pipewire | services | pipewire/ | copy | .config
 ## WARNING: These configurations may be outdated or moved elsewhere;
 ##          please do not enable them. They are kept here for record-keeping only.
 
-#ncmpcpp      | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
-#ncmpcpp      | apps/terminal/tui | ncmpcpp/          | copy | .config
+#ncmpcpp  | apps/terminal/tui | ncmpcpp/error.log | exclude | .config
+#ncmpcpp  | apps/terminal/tui | ncmpcpp/          | copy | .config
 
-#rmpc         | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
-#rmpc         | apps/terminal/tui | rmpc/             | copy | .config
+#rmpc     | apps/terminal/tui | rmpc/bin/onresize | exclude | .config
+#rmpc     | apps/terminal/tui | rmpc/             | copy | .config
 
 #mpd      | services | mpd/playlists | exclude | .config
 #mpd      | services | mpd/          | copy | .config
+
+#yay      | etc | yay/  | copy | .config
