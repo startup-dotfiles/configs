@@ -5,6 +5,3 @@
 ##
 ## pacman
 pacman | etc | pacman/ | copy | .config
-##
-## yay
-yay | etc | yay/ | copy | .config
