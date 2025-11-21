@@ -54,10 +54,11 @@ gdb          | apps/coding | gdb/gdbinit        | copy | .config
 gf2          | apps/coding | gf2_config.ini     | copy | .config
 marksman     | apps/coding | marksman/          | copy | .config
 
-
 # [Apps - Terminal]
 aria2        | apps/terminal/cli | aria2/        | copy | .config
 github-cli   | apps/terminal/cli | gh/           | copy | .config
+fastfetch    | apps/terminal/cli | fastfetch/    | copy | .config
+
 htop         | apps/terminal/tui | htop/         | copy | .config
 
 btop         | apps/terminal/tui | btop/btop.log | exclude | .config
@@ -68,7 +69,6 @@ lazygit      | apps/terminal/tui | lazygit/      | copy | .config
 lazydocker   | apps/terminal/tui | lazydocker/   | copy | .config
 glow         | apps/terminal/tui | glow/         | copy | .config
 procs        | apps/terminal/tui | procs/        | copy | .config
-
 
 go-musicfox  | apps/terminal/tui | go-musicfox/  | copy | .config
 atuin        | apps/terminal/tui | atuin/        | copy | .config
