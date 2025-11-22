@@ -75,7 +75,8 @@ cava         | apps/terminal/tui | cava/         | copy | .config
 go-musicfox  | apps/terminal/tui | go-musicfox/  | copy | .config
 atuin        | apps/terminal/tui | atuin/        | copy | .config
 
-satty        | apps/terminal     | satty/        | copy | .config
+mpv          | apps/             | mpv/          | copy | .config
+satty        | apps/             | satty/        | copy | .config
 
 # [Flags]
 electron         | apps/flags | electron-flags.conf   | copy | .config
