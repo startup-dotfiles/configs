@@ -27,7 +27,7 @@ CompileFlags:
 Index:
   Background: Skip # Disable slow background indexing of these files.
   # StandardLibrary: true
-Style:
+# Style:
   # QuotedHeaders: "src/.*"
   # AngledHeaders: ["third-party/.*"]
 Diagnostics:
@@ -50,7 +50,7 @@ Diagnostics:
       - readability-identifier-naming
       - readability-identifier-length
       # - modernize-use-trailing-return-type
-      - misc-use-internal-linkage 
+      - misc-use-internal-linkage
     # CheckOptions:
     #   readability-identifier-naming.ClassCase: CamelCase
     #   readability-identifier-naming.EnumCase: CamelCase
@@ -67,20 +67,20 @@ Completion:
   ArgumentLists: FullPlaceholders
   # HeaderInsertion: IWYU # IWYU(default), None
 InlayHints:
-  Enabled: false            # enables/disables the inlay-hints feature for all kinds
+  Enabled: false             # enables/disables the inlay-hints feature for all kinds
   # BlockEnd: true           # block end comment
   # Designators: true        # designators in aggregate initialization
   # ParameterNames: true     # parameter names in function calls
   # DeducedTypes: true       # deduced types
   # DefaultArguments: true   # default arguments
   # TypeNameLimit: 24        # character limit for type hints
-Hover:
+# Hover:
   # ShowAKA: false
   # MacroContentsLimit: 2048
-SemanticTokens:
+# SemanticTokens:
   # DisabledKinds: []
   # DisabledModifiers: []
-Documentation:
+# Documentation:
   # CommentFormat: PlainText # PlainText(Defalut), Markdown, Doxygen
 
 ---
