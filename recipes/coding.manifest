@@ -20,6 +20,9 @@ shellcheck | apps/coding | .shellcheckrc | copy | .config
 ## gdb (Debugger)
 gdb | apps/coding | gdb/gdbinit | copy | .config
 ##
+## lldb (Debugger)
+lldb | apps/coding | .lldbinit | copy
+##
 ## gf2 (a GDB frontend)
 gf2 | apps/coding | gf2_config.ini | copy | .config
 ##
